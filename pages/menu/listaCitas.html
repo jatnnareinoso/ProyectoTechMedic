@@ -336,11 +336,23 @@
                             const start = (page - 1) * recordsPerPage;
                             const end = page * recordsPerPage;
                             const paginaCitas = citas.slice(start, end);
-
+                        
                             const tablaCitas = document.getElementById('tabla-citas');
                             tablaCitas.innerHTML = ''; 
-
+                        
                             paginaCitas.forEach((cita) => {
+                                let editUrl;
+                                
+                                if (cita.consulta === 'Consulta Inicial') {
+                                    editUrl = `../registerConsulta.html?id_cita=${cita.id_cita}`;
+                                } else if (cita.consulta === 'Consulta de Seguimiento') {
+                                    editUrl = `../registerConsulta2.html?id_cita=${cita.id_cita}`;
+                                } else if (cita.consulta === 'Consulta de Emergencia') {
+                                    editUrl = `../registerConsulta3.html?id_cita=${cita.id_cita}`;
+                                } else {
+                                    editUrl = `../listaCitas.html`;
+                                }
+                        
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
                                     <td> <a class="user-link">${cita.nombre_paciente} ${cita.apellido_paciente}</a></td>
@@ -350,7 +362,7 @@
                                     <td>${new Date(cita.fecha_hora).toLocaleString()}</td>
                                     <td>${cita.estado ? 'Activo' : 'Inactivo'}</td>
                                     <td style="width: 10%; text-align: center;">
-                                        <a href="../registerConsulta.html" class="table-link" style="margin-right: 8px;">
+                                        <a href="${editUrl}" class="table-link" style="margin-right: 8px;">
                                             <span class="fa-stack fa-sm">
                                                 <i class="fa fa-square fa-stack-2x"></i>
                                                 <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
@@ -366,11 +378,10 @@
                                 `;
                                 tablaCitas.appendChild(row);
                             });
-
+                        
                             document.getElementById('prevButton').disabled = currentPage === 1;
                             document.getElementById('nextButton').disabled = currentPage * recordsPerPage >= citas.length;
                         }
-
                         document.getElementById('prevButton').addEventListener('click', () => {
                             if (currentPage > 1) {
                                 currentPage--;

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>TechMedic/Historial Paciente</title>
+    <script src="https://kit.fontawesome.com/c2b1422a44.js" crossorigin="anonymous"></script>
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" 
+        rel="stylesheet">
+    
+    <link href="../../design/css/pg-admin-1.css" rel="stylesheet">
+    <link href="../../design/css/pg-admin-2.css" rel="stylesheet">
+    <link href="../../design/css/doctor/history3.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96/css/materialdesignicons.min.css" 
+        integrity="sha512-LX0YV/MWBEn2dwXCYgQHrpa9HJkwB+S+bnBpifSOTO1No27TqNMKYoAn6ff2FBh03THAzAiiCwQ+aPX+/Qt/Ow==" 
+            crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .navbar-nav .nav-item .dropdown-menu {
+            min-width: 300px;
+        }
+        .img-profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <img src="../../design/img/logo.png" alt="TechMedic Logo" class="img-fluid">
+                </div>
+                <div class="sidebar-brand-text mx-3">TechMedic</div>
+            </a>
+
+            <hr class="sidebar-divider my-0">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="../pages/profileDC.html">
+                    <i class="fa-solid fa-user-doctor"></i>
+                    <span>Sobre Mi</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item">
+                <a class="nav-link" href="../doctor/tableDC.html">
+                    <i class="fa-solid fa-hospital-user"></i>
+                    <span>Pacientes</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="../doctor/consulta.html">
+                    <i class="fa-solid fa-stethoscope"></i>
+                    <span>Consultas</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="../doctor/message-dc.html">
+                    <i class="fa-regular fa-envelope"></i>
+                    <span>Mensajería</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="../doctor/calendar.html">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Calendario</span></a>
+            </li>
+        </ul>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <div class="form-container">
+                        <form action="../pages/registerPC.html">
+                            <div class="input-group">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-user-plus"></i>
+                                    <span class="button-text d-none d-lg-inline">Registrar Paciente</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <form
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Busqueda Paciente..."
+                                aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <ul class="navbar-nav ml-auto">
+                        <ul class="navbar-nav ml-auto">
+                            <div class="topbar-divider d-none d-sm-block"></div>
+                            <li class="nav-item dropdown no-arrow">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Dra. Jatnna Reinoso</span>
+                                    <div class="img-profile">
+                                        <i class="fas fa-user fa-lg text-gray-600"></i>
+                                    </div>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                    aria-labelledby="userDropdown">
+                                    <a class="dropdown-item" href="../profileDC.html">
+                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Perfil
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Configuración
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Salir
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+    
+                        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="logoutModalLabel">¿Estás seguro de que deseas salir?</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">Selecciona "Salir" para confirmar.</div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                                        <a class="btn btn-primary" href="../login.html">Salir</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ul>
+                </nav>
+
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="card">
+                            <div class="card-body pb-0">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3">
+                                        <div class="text-center">
+                                            <h4 class="text-primary font-size-20 mt-10 mb-2">Pamela Abreu</h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="ms-3">
+                                            <ul class="nav nav-tabs nav-tabs-custom border-bottom-0 mt-3 nav-justfied" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link px-4 "  href="../doctor/historyPC.html" target="__blank">
+                                                        <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                                                        <span class="d-none d-sm-block">Historial</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link px-4 "  href="../doctor/historyPC2.html" target="__blank">
+                                                        <span class="d-block d-sm-none"><i class="mdi mdi-menu-open"></i></span>
+                                                        <span class="d-none d-sm-block">Documentacion</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link px-4  active" data-bs-toggle="tab" href="../doctor/historyPC3.html" role="tab" aria-selected="true">
+                                                        <span class="d-block d-sm-none"><i class="mdi mdi-account-group-outline"></i></span>
+                                                        <span class="d-none d-sm-block">Reporte</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div class="card">
+                            <div class="tab-content p-4">
+
+                                <div class="tab-pane active show" id="tasks-tab" role="tabpanel">
+                                    <h4 class="card-title mb-4">Reportes Medicos</h4>
+                
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div class="task-list-box" id="landing-task">
+                                                <div id="task-item-1">
+                                                    <div class="card task-box rounded-3">
+                                                        <div class="card-body">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-xl-6 col-sm-5">
+                                                                    <h5 class="form-check-label ms-1 task-title">Consulta Medica</h5>
+                                                                </div>
+                                                                <div class="col-xl-6 col-sm-7">
+                                                                    <div class="row align-items-center">
+                                                                        <div class="col-xl-12 col-md-5 col-sm-12">
+                                                                            <div class="d-flex flex-wrap gap-3 mt-3 mt-xl-0 justify-content-md-end">
+                                                                                <div>
+                                                                                    <button type="button" class="btn btn-primary btn-sm w-5">GENERAR</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="task-list-box" id="landing-task">
+                                                <div id="task-item-1">
+                                                    <div class="card task-box rounded-3">
+                                                        <div class="card-body">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-xl-6 col-sm-5">
+                                                                    <h5 class="form-check-label ms-1 task-title">Historial Clinico</h5>
+                                                                </div>
+                                                                <div class="col-xl-6 col-sm-7">
+                                                                    <div class="row align-items-center">
+                                                                        <div class="col-xl-12 col-md-5 col-sm-12">
+                                                                            <div class="d-flex flex-wrap gap-3 mt-3 mt-xl-0 justify-content-md-end">
+                                                                                <div>
+                                                                                    <button type="button" class="btn btn-primary btn-sm w-5">GENERAR</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                
+                                            <div class="task-list-box" id="design-task">
+                                                <div id="task-item-2">
+                                                    <div class="card task-box rounded-3">
+                                                        <div class="card-body">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-xl-6 col-sm-5">
+                                                                    <h5 class="form-check-label ms-1 task-title">Receta Medica</h5>
+                                                                </div>
+                                                                <div class="col-xl-6 col-sm-7">
+                                                                    <div class="row align-items-center">
+                                                                        <div class="col-xl-12 col-md-5 col-sm-12">
+                                                                            <div class="d-flex flex-wrap gap-3 mt-3 mt-xl-0 justify-content-md-end">
+                                                                                <div>
+                                                                                    <button type="button" class="btn btn-primary btn-sm w-5">GENERAR</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                
+                                        </div>
+                                    </div>
+                                </div>
+                                   
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div>
+                                    <h4 class="card-title mb-4">Detalles Personales
+                                        <a href="#" class="text-muted fw-medium ms-2" title="Editar información">
+                                            <i class="mdi mdi-square-edit-outline font-size-3 align-middle"></i>
+                                        </a>
+                                    </h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered mb-0">
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">Nombre</th>
+                                                    <td>Pablo Altagracia Abreu De Leon</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">No. Identidad/Pasaporte</th>
+                                                    <td>40234567567</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Fecha de Nacimiento</th>
+                                                    <td>06/09/2002</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Nacionalidad</th>
+                                                    <td>Dominicano</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Direccion</th>
+                                                    <td>La Vega, Av. Pedro Rivera, Residencial Omelia</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Celular</th>
+                                                    <td>8093455643</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Telefono</th>
+                                                    <td>8093455643</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <div>
+                                    <h4 class="card-title mb-4">Detalles Familiar
+                                        <a href="#" class="text-muted fw-medium ms-2" title="Editar información">
+                                            <i class="mdi mdi-square-edit-outline font-size-3 align-middle"></i>
+                                        </a>
+                                    </h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered mb-0">
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">Nombre</th>
+                                                    <td>Pablo Abreu Gil</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">No. Identidad/Pasaporte</th>
+                                                    <td>40234567567</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Correo Electronico</th>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Telefono</th>
+                                                    <td>8092435670</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                          
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

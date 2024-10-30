@@ -83,7 +83,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="./menu/listpacient-asis.html">
+                <a class="nav-link" href="../menu/listpacient-asis.html">
                     <i class="fa-solid fa-bed"></i>
                     <span>Pacientes</span></a>
             </li>
@@ -291,23 +291,14 @@
                 
                         try {
                             const response = await fetch(`/api/cita/citasUsuario?id_usuario=${user.id_usuario}`);
-                            citas = await response.json();
-                            allCitas = [...citas]; 
-                            renderPage(currentPage);
-                
-                            document.getElementById('prevButton').addEventListener('click', () => {
-                                if (currentPage > 1) {
-                                    currentPage--;
-                                    renderPage(currentPage);
-                                }
-                            });
-                
-                            document.getElementById('nextButton').addEventListener('click', () => {
-                                if (currentPage * recordsPerPage < allCitas.length) {
-                                    currentPage++;
-                                    renderPage(currentPage);
-                                }
-                            });
+                            allCitas = await response.json();
+                            
+                            if (Array.isArray(allCitas) && allCitas.length > 0) {
+                                citas = allCitas;
+                                renderPage(currentPage);
+                            } else {
+                                console.error('No se encontraron citas:', allCitas);
+                            }
                         } catch (error) {
                             console.error('Error al obtener las citas:', error);
                         }
@@ -321,6 +312,17 @@
                             tablaCitas.innerHTML = ''; 
                             
                             paginaCitas.forEach((cita) => {
+
+                                let editUrl;
+                                if (cita.consulta === 'Consulta Inicial') {
+                                    editUrl = `../registerConsulta-asis.html?id_cita=${cita.id_cita}`;
+                                } else if (cita.consulta === 'Consulta de Seguimiento') {
+                                    editUrl = `../registerConsulta2-asis.html?id_cita=${cita.id_cita}`;
+                                } else if (cita.consulta === 'Consulta de Emergencia') {
+                                    editUrl = `../registerConsulta3-asis.html?id_cita=${cita.id_cita}`;
+                                } else {
+                                    editUrl = '../listaCitas.html';
+                                }
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
                                     <td> <a class="user-link">${cita.nombre_paciente} ${cita.apellido_paciente}</a></td>
@@ -330,7 +332,7 @@
                                     <td>${new Date(cita.fecha_hora).toLocaleString()}</td>
                                     <td>${cita.estado ? 'Activo' : 'Inactivo'}   
                                     <td style="width: 10%; text-align: center;">
-                                        <a href="../registerConsulta.html" class="table-link" style="margin-right: 8px;">
+                                        <a href="${editUrl}" class="table-link" style="margin-right: 8px;">
                                             <span class="fa-stack fa-sm">
                                                 <i class="fa fa-square fa-stack-2x"></i>
                                                 <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
@@ -345,20 +347,6 @@
                                     </td>
                                 `;
                                 tablaCitas.appendChild(row);
-                
-                                row.querySelector('.edit-cita-btn').addEventListener('click', function (event) {
-                                    const id_cita = event.currentTarget.getAttribute('data-id-cita');
-                                    console.log('ID de la cita:', id_cita);
-                
-                                    const citaSeleccionada = citas.find(c => c.id_cita == id_cita);
-                
-                                    if (citaSeleccionada) {
-                                        console.log("Editando cita:", citaSeleccionada);
-                                       
-                                    } else {
-                                        console.error('Cita no encontrada:', id_cita);
-                                    }
-                                });
                             });
                 
                             document.getElementById('prevButton').disabled = currentPage === 1;

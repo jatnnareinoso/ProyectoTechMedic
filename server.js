@@ -12,6 +12,8 @@ const citaRoutes = require('./design/js/cita');
 const asistenteDoctorRoutes = require('./design/js/asistente-doctor');
 const usuarioRouter = require('./design/js/usuario'); 
 const  {buscarUsuarios } = require('./design/js/listaUsuarios');
+const consultaRoutes = require('./design/js/consulta');
+const historialRoutes = require('./design/js/historial-paciente');
 
 const app = express();
 const port = 3003;
@@ -151,6 +153,10 @@ app.use('/api', changePassword);
 app.use('/api/doctor', doctorRoutes);
 
 app.use('/api/cita', citaRoutes);
+
+app.use('/api/consulta', consultaRoutes);
+
+app.use('/api/historial', historialRoutes);
 
 app.use('/api/', asistenteDoctorRoutes);
 

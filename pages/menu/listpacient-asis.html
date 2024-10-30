@@ -579,16 +579,16 @@
                             const start = (page - 1) * recordsPerPage;
                             const end = page * recordsPerPage;
                             const paginaPerfiles = perfiles.slice(start, end);
-                
+                        
                             const tablaPaciente = document.getElementById('tabla-paciente');
-                            tablaPaciente.innerHTML = ''; 
+                            tablaPaciente.innerHTML = '';
                             paginaPerfiles.forEach((paciente) => {
                                 const row = document.createElement('tr');
-                
+                        
                                 if (paciente.menor === true) {
                                     paciente.cedula = paciente.cedula_familiar;
                                 }
-                
+                        
                                 row.innerHTML = `
                                     <td class="px-4 py-3 text-sm">${paciente.nombre}</td>
                                     <td class="px-4 py-3 text-sm">${paciente.apellido}</td>
@@ -609,14 +609,20 @@
                                         </button>
                                     </td>
                                 `;
+                        
+                                // Evento para doble clic en la fila
+                                row.addEventListener('dblclick', function () {
+                                    window.location.href = `historyPC.html?id_paciente=${paciente.id_paciente}`;
+                                });
+                        
                                 tablaPaciente.appendChild(row);
-                
+                        
                                 row.querySelector('.edit-paciente-btn').addEventListener('click', function (event) {
                                     const id_paciente = event.currentTarget.getAttribute('data-id-paciente');
-                                    console.log('ID del paciente:', id_paciente); 
-                
+                                    console.log('ID del paciente:', id_paciente);
+                        
                                     const paciente = perfiles.find(p => p.id_paciente == id_paciente);
-                
+                        
                                     if (paciente) {
                                         abrirModalEditarPaciente(paciente);
                                     } else {
@@ -624,11 +630,11 @@
                                     }
                                 });
                             });
-                
+                        
                             document.getElementById('prevButton').disabled = currentPage === 1;
                             document.getElementById('nextButton').disabled = currentPage * recordsPerPage >= perfiles.length;
                         }
-                
+                        
                         document.querySelector('.close').addEventListener('click', function () {
                             document.getElementById('editarPacienteModal').classList.remove('show');
                             document.getElementById('editarPacienteModal').style.display = 'none';
