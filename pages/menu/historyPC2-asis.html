@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,10 +13,10 @@
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" 
         rel="stylesheet">
-    
+
     <link href="../../design/css/pg-admin-1.css" rel="stylesheet">
     <link href="../../design/css/pg-admin-2.css" rel="stylesheet">
-    <link href="../../design/css/doctor/history3.css" rel="stylesheet">
+    <link href="../../design/css/doctor/history.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96/css/materialdesignicons.min.css" 
         integrity="sha512-LX0YV/MWBEn2dwXCYgQHrpa9HJkwB+S+bnBpifSOTO1No27TqNMKYoAn6ff2FBh03THAzAiiCwQ+aPX+/Qt/Ow==" 
             crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -24,7 +25,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        .navbar-nav .nav-item .dropdown-menu {
+        .navbar-nav .nav-item .dropdown-menu {          
             min-width: 300px;
         }
         .img-profile {
@@ -37,7 +38,7 @@
             align-items: center;
         }
     </style>
-    
+
 </head>
 
 <body id="page-top">
@@ -45,7 +46,7 @@
 
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../profileDC.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../profileUser.html">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="../../design/img/logo_only.png" alt="TechMedic Logo" class="img-fluid">
                 </div>
@@ -55,62 +56,56 @@
             <hr class="sidebar-divider my-0">
 
             <li class="nav-item active">
-                <a class="nav-link" href="../profileDC.html">
-                    <i class="fa-solid fa-user-doctor"></i>
+                <a class="nav-link" href="../profileUser.html">
+                    <i class="fa-solid fa-user-nurse"></i>
                     <span>Sobre Mi</span></a>
             </li>
 
             <hr class="sidebar-divider">
 
             <li class="nav-item">
-                <a class="nav-link" href="../menu/listpacient.html">
+                <a class="nav-link" href="">
                     <i class="fa-solid fa-hospital-user"></i>
-                    <span>Pacientes</span>
+                    <span>Doctores</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="../menu/listaCitas.html">
-                    <i class="fa-solid fa-hospital-user"></i>
-                    <span>Citas</span>
-                </a>
+                <a class="nav-link" href="../menu/listaCitas-asis.html">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Citas</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fa-solid fa-stethoscope"></i>
-                    <span>Historial Clínico</span>
-                </a>
+                <a class="nav-link" href="../menu/listpacient-asis.html">
+                    <i class="fa-solid fa-bed"></i>
+                    <span>Pacientes</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="../menu/calendarAsis.html">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Calendario</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="">
                     <i class="fa-regular fa-envelope"></i>
                     <span>Mensajería</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="../menu/calendar.html">
-                    <i class="fa-solid fa-calendar-days"></i>
-                    <span>Calendario</span></a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fa-solid fa-briefcase"></i>
-                    <span>Permisos</span></a>
-            </li>
-
-               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="">
                     <i class="fa-solid fa-circle-info"></i>
                     <span>Informaciones</span></a>
             </li>
 
         </ul>
         <div id="content-wrapper" class="d-flex flex-column">
+
             <div id="content">
+
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -118,7 +113,7 @@
                     </button>
 
                     <div class="form-container">
-                        <form action="registerPC.html">
+                        <form action="registerPC-asis.html">
                             <div class="input-group">
                                 <button class="btn btn-primary">
                                     <i class="fas fa-user-plus"></i>
@@ -142,21 +137,21 @@
                     <script>
                         document.addEventListener('DOMContentLoaded', function () {
                             document.getElementById('searchButton').addEventListener('click', function (event) {
-                                event.preventDefault(); 
+                                event.preventDefault();
                                 const searchQuery = document.getElementById('searchInput').value.trim();
                                 if (searchQuery) {
-                                    localStorage.setItem('searchQuery', searchQuery); 
-                                    window.location.href = `listpacient.html`;
+                                    localStorage.setItem('searchQuery', searchQuery);
+                                    window.location.href = `listpacient-asis.html`;
                                 }
                             });
-
+                    
                             document.getElementById('searchInput').addEventListener('keypress', function (e) {
                                 if (e.key === 'Enter') {
-                                    e.preventDefault(); 
+                                    e.preventDefault();
                                     const searchQuery = document.getElementById('searchInput').value.trim();
                                     if (searchQuery) {
-                                        localStorage.setItem('searchQuery', searchQuery);
-                                        window.location.href = `listpacient.html`;
+                                        localStorage.setItem('searchQuery', searchQuery); 
+                                        window.location.href = `listpacient-asis.html`; 
                                     }
                                 }
                             });
@@ -187,6 +182,74 @@
                             </div>
                         </li>
 
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <span class="badge badge-danger badge-counter"></span>
+                            </a>
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Notificaciones
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fas fa-file-alt text-white"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-success">
+                                            <i class="fas fa-donate text-white"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-warning">
+                                            <i class="fas fa-exclamation-triangle text-white"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Ver todas las notificaciones</a>
+                            </div>
+                        </li>
+
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-envelope fa-fw"></i>
+                                <span class="badge badge-danger badge-counter"></span>
+                            </a>
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="messagesDropdown">
+                                <h6 class="dropdown-header">
+                                    Centro de Mensajes
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="../../design/img/undraw_profile_1.svg"
+                                            alt="...">
+                                        <div class="status-indicator bg-success"></div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="../../design/img/undraw_profile_2.svg"
+                                            alt="...">
+                                        <div class="status-indicator"></div>
+                                    </div>
+                                    <div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Leer otros mensajes</a>
+                            </div>
+                        </li>
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -196,24 +259,25 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="../profileDC.html">
+                                <a class="dropdown-item" href="../profileUser.html">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Perfil
                                 </a>
-                                <a class="dropdown-item" href=".//editarDC.html">
+                                <a class="dropdown-item" href="../editarUser.html">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Configuración
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="logoutModal" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Salir
                                 </a>
                             </div>
-                        </li>                 
-                    </ul>
-                </nav>
+                        </li>
 
+                    </ul>
+
+                </nav>
                 <div class="row">
                     <div class="col-xl-8">
                         <div class="card">
@@ -233,12 +297,12 @@
                                                     </a>
                                                 </li>
                                                 <li class="nav-item" role="presentation">
-                                                    <a class="nav-link px-4" id="documentacion-link">
+                                                    <a class="nav-link px-4 active" id="documentacion-link">
                                                         <span class="d-none d-sm-block">Documentación</span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item" role="presentation">
-                                                    <a class="nav-link px-4 active" id="reporte-link">
+                                                    <a class="nav-link px-4" id="reporte-link">
                                                         <span class="d-none d-sm-block">Reporte</span>
                                                     </a>
                                                 </li>
@@ -251,9 +315,9 @@
                 
                         <div class="card">
                             <div class="tab-content p-4">
-
+                                
                                 <div class="tab-pane active show" id="tasks-tab" role="tabpanel">
-                                    <h4 class="card-title mb-4">Reportes Medicos</h4>
+                                    <h4 class="card-title mb-4">Documentos Medicos</h4>
                 
                                     <div class="row">
                                         <div class="col-xl-12">
@@ -263,39 +327,17 @@
                                                         <div class="card-body">
                                                             <div class="row align-items-center">
                                                                 <div class="col-xl-6 col-sm-5">
-                                                                    <h5 class="form-check-label ms-1 task-title">Consulta Medica</h5>
+                                                                    <h5 class="form-check-label ms-1 task-title">Oftamologia</h5>
                                                                 </div>
                                                                 <div class="col-xl-6 col-sm-7">
                                                                     <div class="row align-items-center">
-                                                                        <div class="col-xl-12 col-md-5 col-sm-12">
-                                                                            <div class="d-flex flex-wrap gap-3 mt-3 mt-xl-0 justify-content-md-end">
-                                                                                <div>
-                                                                                    <button type="button" class="btn btn-primary btn-sm w-5">GENERAR</button>
-                                                                                </div>
-                                                                            </div>
+                                                                        <div class="col-xl-5 col-md-6 col-sm-5">
+                                                                            <label class="form-check-label ms-1 task-title">Dra. Laura Abreu</label>
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="task-list-box" id="landing-task">
-                                                <div id="task-item-1">
-                                                    <div class="card task-box rounded-3">
-                                                        <div class="card-body">
-                                                            <div class="row align-items-center">
-                                                                <div class="col-xl-6 col-sm-5">
-                                                                    <h5 class="form-check-label ms-1 task-title">Historial Clinico</h5>
-                                                                </div>
-                                                                <div class="col-xl-6 col-sm-7">
-                                                                    <div class="row align-items-center">
-                                                                        <div class="col-xl-12 col-md-5 col-sm-12">
+                                                                        <div class="col-xl-7 col-md-6 col-sm-7">
                                                                             <div class="d-flex flex-wrap gap-3 mt-3 mt-xl-0 justify-content-md-end">
                                                                                 <div>
-                                                                                    <button type="button" class="btn btn-primary btn-sm w-5">GENERAR</button>
+                                                                                    <button type="button" class="btn btn-primary btn-sm w-5" onclick="openRequestModal()">SOLICITUD</button>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -313,14 +355,17 @@
                                                         <div class="card-body">
                                                             <div class="row align-items-center">
                                                                 <div class="col-xl-6 col-sm-5">
-                                                                    <h5 class="form-check-label ms-1 task-title">Receta Medica</h5>
+                                                                    <h5 class="form-check-label ms-1 task-title">Oncologia</h5>
                                                                 </div>
                                                                 <div class="col-xl-6 col-sm-7">
                                                                     <div class="row align-items-center">
-                                                                        <div class="col-xl-12 col-md-5 col-sm-12">
+                                                                        <div class="col-xl-5 col-md-6 col-sm-5">
+                                                                            <label class="form-check-label ms-1 task-title">Dra. Victor Peralda</label>
+                                                                        </div>
+                                                                        <div class="col-xl-7 col-md-6 col-sm-7">
                                                                             <div class="d-flex flex-wrap gap-3 mt-3 mt-xl-0 justify-content-md-end">
                                                                                 <div>
-                                                                                    <button type="button" class="btn btn-primary btn-sm w-5">GENERAR</button>
+                                                                                    <button type="button" class="btn btn-primary btn-sm w-5" onclick="openRequestModal()">SOLICITUD</button>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -332,14 +377,56 @@
                                                 </div>
                                             </div>
                 
+                                            <div class="task-list-box" id="blog-task">
+                                                <div id="task-item-3">
+                                                    <div class="card task-box rounded-3">
+                                                        <div class="card-body">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-xl-6 col-sm-5">
+                                                                    <h5 class="form-check-label ms-1 task-title">Pediatria</h5>
+                                                                </div>
+                                                                <div class="col-xl-6 col-sm-7">
+                                                                    <div class="row align-items-center">
+                                                                        <div class="col-xl-5 col-md-6 col-sm-5">
+                                                                            <label class="form-check-label ms-1 task-title">Dr. Gustavo Ruiz</label>
+                                                                        </div>
+                                                                        <div class="col-xl-7 col-md-6 col-sm-7">
+                                                                            <div class="d-flex flex-wrap gap-3 mt-3 mt-xl-0 justify-content-md-end">
+                                                                                <div>
+                                                                                    <button type="button" class="btn btn-primary btn-sm w-5" onclick="openRequestModal()">SOLICITUD</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div id="requestModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); 
+                                                    background:white; border:1px solid #ccc; padding:20px; width:600px; height:400px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index:1000;">
+                                                <h4>Motivo de Solicitud</h4>
+                                                <textarea id="requestText" rows="10" style="width:100%; height:200px;"></textarea>
+                                                <div class="mt-3">
+                                                    <button onclick="sendRequest()" class="btn btn-primary">Enviar</button>
+                                                    <button onclick="closeRequestModal()" class="btn btn-secondary">Cerrar</button>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Overlay -->
+                                            <div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999;"></div>
+                                            
                                         </div>
                                     </div>
                                 </div>
-                                   
+                                
                             </div>
                         </div>
                     </div>
-
+                
                     <div class="col-xl-4">
                         <div class="card">
                             <div class="card-body">
@@ -441,7 +528,9 @@
                             </div>
                         </div>
                     </div>
+         
                 </div>
+                
             </div>
         </div>
     </div>
@@ -463,7 +552,7 @@
             </div>
         </div>
     </div>
-
+ 
     <script>
         document.getElementById('logoutButton').addEventListener('click', function() {
             fetch('/api/logout', {
@@ -509,10 +598,9 @@
             console.error('ID de paciente no proporcionado en la URL');
         }
 
-        document.getElementById('historial-link').href = `../menu/historyPC.html?id_paciente=${id_paciente}`;
-        document.getElementById('documentacion-link').href = `../menu/historyPC2.html?id_paciente=${id_paciente}`;
-        document.getElementById('reporte-link').href = `../menu/historyPC3.html?id_paciente=${id_paciente}`;
-
+        document.getElementById('historial-link').href = `../menu/historyPC-asis.html?id_paciente=${id_paciente}`;
+        document.getElementById('documentacion-link').href = `../menu/historyPC2-asis.html?id_paciente=${id_paciente}`;
+        document.getElementById('reporte-link').href = `../menu/historyPC3-asis.html?id_paciente=${id_paciente}`;
 
         function obtenerDetallesPaciente(id_paciente) {
             fetch(`/api/historial/paciente/${id_paciente}`)

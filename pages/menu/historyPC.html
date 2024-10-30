@@ -46,7 +46,7 @@
 
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="profileDC.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../profileDC.html">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="../../design/img/logo_only.png" alt="TechMedic Logo" class="img-fluid">
                 </div>
@@ -149,7 +149,7 @@
                                 const searchQuery = document.getElementById('searchInput').value.trim();
                                 if (searchQuery) {
                                     localStorage.setItem('searchQuery', searchQuery); 
-                                    window.location.href = `./menu/listpacient.html`;
+                                    window.location.href = `listpacient.html`;
                                 }
                             });
 
@@ -159,7 +159,7 @@
                                     const searchQuery = document.getElementById('searchInput').value.trim();
                                     if (searchQuery) {
                                         localStorage.setItem('searchQuery', searchQuery);
-                                        window.location.href = `./menu/listpacient.html`;
+                                        window.location.href = `listpacient.html`;
                                     }
                                 }
                             });
@@ -199,11 +199,11 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="profileDC.html">
+                                <a class="dropdown-item" href="../profileDC.html">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Perfil
                                 </a>
-                                <a class="dropdown-item" href="editarDC.html">
+                                <a class="dropdown-item" href=".//editarDC.html">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Configuración
                                 </a>
@@ -235,12 +235,12 @@
                                                     </a>
                                                 </li>
                                                 <li class="nav-item" role="presentation">
-                                                    <a class="nav-link px-4" id="documentacion-link" target="_blank">
+                                                    <a class="nav-link px-4" id="documentacion-link">
                                                         <span class="d-none d-sm-block">Documentación</span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item" role="presentation">
-                                                    <a class="nav-link px-4" id="reporte-link" target="_blank">
+                                                    <a class="nav-link px-4" id="reporte-link">
                                                         <span class="d-none d-sm-block">Reporte</span>
                                                     </a>
                                                 </li>
@@ -276,7 +276,7 @@
                                         <tbody>
                                             <tr>
                                                 <th scope="row">Nombre</th>
-                                                <td id="paciente_nombre"></td>
+                                                <td id="paciente_name"></td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">No. Identidad/Pasaporte</th>
@@ -417,6 +417,7 @@
                 .then(data => {
                     const fechaNacimiento = new Date(data.fecha_nacimiento).toISOString().split('T')[0];
                     document.getElementById('paciente_nombre').textContent = `${data.nombre} ${data.apellido}`;
+                    document.getElementById('paciente_name').textContent = `${data.nombre} ${data.apellido}`;
                     document.getElementById('paciente-identificacion').textContent = data.cedula;
                     document.getElementById('paciente-fecha-nacimiento').textContent = fechaNacimiento;
                     document.getElementById('paciente-nacionalidad').textContent = data.nacionalidad;
@@ -438,36 +439,29 @@
 
         async function obtenerConsultasPaciente() {
             const idPaciente = new URLSearchParams(window.location.search).get('id_paciente');
-            
+        
             try {
                 const response = await fetch(`/api/historial/consultas/paciente/${idPaciente}`);
                 const consultas = await response.json();
         
-                console.log(consultas); // Esto te ayudará a ver la estructura de los datos
-                
-                // Muestra las consultas en el frontend
                 const contenedorConsultas = document.getElementById('historial-medico');
                 if (!contenedorConsultas) {
                     console.error('No se encontró el contenedor de consultas');
-                    return; // Salir de la función si no se encuentra el contenedor
+                    return;
                 }
         
-                contenedorConsultas.innerHTML = ''; // Limpia el contenedor
+                contenedorConsultas.innerHTML = '';
         
-                // Itera sobre las especialidades
                 for (const especialidad of consultas) {
                     const consultasDeEspecialidad = especialidad.consultas;
         
-                    // Si hay consultas, encuentra la más reciente
                     if (consultasDeEspecialidad.length > 0) {
-                        // Ordena las consultas por fecha
                         consultasDeEspecialidad.sort((a, b) => new Date(b.fecha_consulta) - new Date(a.fecha_consulta));
         
-                        // Toma solo la consulta más reciente
                         const consultaMasReciente = consultasDeEspecialidad[0];
         
                         const especialidadDiv = document.createElement('div');
-                        especialidadDiv.className = 'col-md-6'; // Asegúrate de que cada especialidad ocupe medio ancho en una fila
+                        especialidadDiv.className = 'col-md-6';
         
                         especialidadDiv.innerHTML = `
                             <div class="card">
@@ -491,10 +485,12 @@
                                         <h5 class="mb-1 font-size-17 team-title">${especialidad.especialidad}</h5>
                                         <p class="text-muted mb-0 team-description">Doctor: ${consultaMasReciente.doctor}</p>
                                     </div>
-                                    
+                                    <button class="btn btn-primary" onclick="verDetallePorEspecialidad(${idPaciente}, ${especialidad.id_especialidad})">Ver detalle</button>
                                 </div>
                             </div>
                         `;
+        
+                        console.log('ID Especialidad:', especialidad.id_especialidad);  // Verificar el valor
         
                         contenedorConsultas.appendChild(especialidadDiv);
                     }
@@ -504,13 +500,17 @@
             }
         }
         
-        // Asegúrate de llamar a la función
-        obtenerConsultasPaciente();
+        // Función para redirigir a medicalHistory.html con id_paciente e id_especialidad
+        function verDetallePorEspecialidad(idPaciente, idEspecialidad) {
+            if (!idEspecialidad) {
+                console.error('idEspecialidad está indefinido');
+                return;
+            }
         
-
-        function verDetallesConsulta(idConsulta) {
-            window.location.href = `detallesConsulta.html?id_consulta=${idConsulta}`;
-        }
+            window.location.href = `../menu/medicalHistory.html?id_paciente=${idPaciente}&id_especialidad=${idEspecialidad}`;
+        }        
+        
+        obtenerConsultasPaciente();
     
         function deleteProjects(id) {
             console.log(`Eliminar consulta con ID: ${id}`);
@@ -518,6 +518,24 @@
     
     </script>
 
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">¿Listo para salir?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Selecciona "Cerrar sesión" si estás listo para finalizar tu sesión actual.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" id="logoutButton">Cerrar sesión</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
         document.getElementById('logoutButton').addEventListener('click', function() {
             fetch('/api/logout', {
