@@ -4,7 +4,7 @@ const path = require('path');
 const client = require('./design/js/db');
 const userRoutes = require('./design/js/userRoutes');
 const login = require('./design/js/login');
-const registrarPaciente = require('./design/js/registroPaciente');
+const {registrarPaciente, buscarPacientePorCedula} = require('./design/js/registroPaciente');
 const { obtenerPerfilesPacientes, actualizarPaciente, buscarPacientes, buscarPacientesCitas } = require('./design/js/listaPacientes');
 const changePassword = require('./design/js/change-password');
 const doctorRoutes = require('./design/js/doctor');
@@ -37,7 +37,7 @@ app.post('/api/logout', (req, res) => {
       if (err) {
           return res.status(500).json({ error: 'Error al cerrar sesión' });
       }
-      res.clearCookie('connect.sid');  // Elimina la cookie de la sesión
+      res.clearCookie('connect.sid');  
       return res.json({ message: 'Sesión cerrada exitosamente' });
   });
 });
@@ -114,11 +114,21 @@ app.put('/api/pacientes/:id', async (req, res) => {
     }
     
     res.status(200).json({ mensaje: resultado.mensaje });
-  });
+});
 
+app.post('/api/registerPaciente', registrarPaciente);  
 
+app.get('/api/buscarCedula/:cedula', async (req, res) => {
+  const { cedula } = req.params;
 
-app.post('/api/registerPaciente', registrarPaciente.registrarPaciente);
+  try {
+      const paciente = await buscarPacientePorCedula(cedula);
+      res.json(paciente);
+  } catch (error) {
+      console.error('Error al buscar paciente por cédula:', error.message);
+      res.status(500).json({ error: 'Error al buscar paciente' });
+  }
+});
 
 app.get('/api/verificar-correo', async (req, res) => {
     const { correo } = req.query;
@@ -133,11 +143,11 @@ app.get('/api/verificar-correo', async (req, res) => {
     }
 });
 
-app.get('/api/verificar-usuario', async (req, res) => {
-    const { usuario } = req.query;
+app.get('/api/verificar-cedula', async (req, res) => {
+    const { cedula } = req.query;
 
     try {
-        const result = await client.query('SELECT COUNT(*) FROM usuario WHERE usuario = $1', [usuario]);
+        const result = await client.query('SELECT COUNT(*) FROM usuario WHERE cedula = $1', [cedula]);
         const enUso = result.rows[0].count > 0;
         res.json({ enUso });
     } catch (err) {

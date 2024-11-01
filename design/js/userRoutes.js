@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-
-const defaultPassword = 'tecnologiamedicinal'; 
+const crypto = require('crypto');
+const sgMail = require('@sendgrid/mail');
 
 module.exports = (client) => {
     router.get('/centros_medicos', async (req, res) => {
@@ -66,7 +66,7 @@ module.exports = (client) => {
     router.post('/register', async (req, res) => {
         const {
             userType, nombre, apellido, fecha_nacimiento, sexo, celular, telefono, cedula, exequatur,
-            id_centro_medico, correo, usuario, id_especialidades, id_doctores 
+            id_centro_medico, correo, id_especialidades, id_doctores 
         } = req.body;
 
         let id_tipo_usuario;
@@ -80,24 +80,34 @@ module.exports = (client) => {
             return res.status(400).json({ message: 'Tipo de usuario no válido' });
         }
 
+        const fechaNacimiento = new Date(fecha_nacimiento);
+
+        const year = fechaNacimiento.getFullYear().toString().slice(-2); 
+        const randomSuffix = crypto.randomBytes(2).toString('hex');
+        const inicialNombre = nombre.toLowerCase().charAt(0); 
+        const inicialApellido = apellido.toLowerCase().charAt(0); 
+
+        const nombreUsuario = `${nombre.toLowerCase().slice(0, 3)}${apellido.toLowerCase().slice(0, 2)}${year}${inicialNombre}${inicialApellido}${randomSuffix}`;
+        const password = crypto.randomBytes(8).toString('hex');
+
         try {
             const correoExistente = await client.query('SELECT 1 FROM usuario WHERE correo = $1', [correo]);
             if (correoExistente.rows.length > 0) {
                 return res.status(409).json({ message: 'El correo ya está en uso' });
             }
 
-            const usuarioExistente = await client.query('SELECT 1 FROM usuario WHERE usuario = $1', [usuario]);
-            if (usuarioExistente.rows.length > 0) {
-                return res.status(409).json({ message: 'El nombre de usuario ya está en uso' });
+            const cedulaExistente = await client.query('SELECT 1 FROM usuario WHERE cedula = $1', [cedula]);
+            if (cedulaExistente.rows.length > 0) {
+                return res.status(409).json({ message: 'Existe un usuario registrado con ese número de identificación' });
             }
 
             await client.query('BEGIN');
 
             const insertUsuarioQuery = `
-                INSERT INTO usuario (nombre, apellido, fecha_nacimiento, sexo, celular, telefono, cedula, correo, usuario, id_tipo_usuario, password, id_centro_medico)
+                INSERT INTO usuario (nombre, apellido, fecha_nacimiento, sexo, celular, telefono, cedula, correo, id_tipo_usuario, id_centro_medico, usuario, password)
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id_usuario
             `;
-            const { rows: usuarioResult } = await client.query(insertUsuarioQuery, [nombre, apellido, fecha_nacimiento, sexo, celular, telefono, cedula, correo, usuario, id_tipo_usuario, defaultPassword, id_centro_medico]);
+            const { rows: usuarioResult } = await client.query(insertUsuarioQuery, [nombre, apellido, fecha_nacimiento, sexo, celular, telefono, cedula, correo, id_tipo_usuario,  id_centro_medico, nombreUsuario, password]);
             const id_usuario = usuarioResult[0].id_usuario;
 
             if (id_tipo_usuario === 2) { 
@@ -144,12 +154,21 @@ module.exports = (client) => {
                 console.log(`Asistente administrativo ${id_usuario} asociado con los doctores ${id_doctores}`);
             }
 
+            const msg = {
+                to: correo,
+                from: 'tecnologiamedicinaltechmedic@gmail.com', 
+                subject: 'TechMedic - Credenciales',
+                text: `Hola ${nombre} ${apellido}, tu registro fue exitoso.\n\nAquí tienes tus credenciales de acceso:\nUsuario: ${nombreUsuario}\nContraseña: ${password}\n\nTe recomendamos cambiar tu contraseña después de iniciar sesión.`
+            };
+    
+            await sgMail.send(msg);
+    
             await client.query('COMMIT');
-            res.status(201).json({ message: 'Usuario registrado correctamente' });
-
+            res.status(201).json({ message: 'Usuario registrado y correo enviado exitosamente' });
+    
         } catch (error) {
             await client.query('ROLLBACK');
-            console.error('Error al registrar el usuario:', error);
+            console.error('Error al registrar el usuario o enviar el correo:', error);
             res.status(500).json({ message: 'Error interno del servidor' });
         }
     });

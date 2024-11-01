@@ -51,13 +51,12 @@ router.get('/consultas/paciente/:id_paciente', async (req, res) => {
             [id_paciente]
         );
 
-        // Agrupa las consultas por especialidad y agrega id_especialidad
         const consultasAgrupadas = result.rows.reduce((acc, row) => {
             const especialidad = row.especialidad;
             if (!acc[especialidad]) {
                 acc[especialidad] = {
                     especialidad,
-                    id_especialidad: row.id_especialidad,  // Incluye el id_especialidad
+                    id_especialidad: row.id_especialidad,  
                     consultas: []
                 };
             }

@@ -56,7 +56,8 @@
 
                         <div class="input-field" id="cedulaField">
                             <label>Número de Identidad/Pasaporte</label>
-                            <input type="number" name="cedula" placeholder="Ingrese número de indentidad/pasaporte">
+                            <input type="number" name="cedula" placeholder="Ingrese número de indentidad/pasaporte" id="cedulaInput">
+                            <div id="mensajePaciente" style="color: red; display: none;"></div>
                         </div>
                         
                         <div class="input-field" id="nacionalidadField">
@@ -104,7 +105,7 @@
                             <input type="text" name="altura" placeholder="Ingresa la altura" required>
                         </div>
                         <div class="input-field" id="sustanciaField">
-                            <label>¿Consume alguna sustancia? (Alcohol, tabaco...)</label>
+                            <label>¿Consume alguna sustancia adictiva? (Alcohol, tabaco...)</label>
                             <select name="sustancia" id="sustancia" onchange="toggleDetail('detalleSustancia')">
                                 <option value="">Seleccione</option>
                                 <option value="si">Sí</option>
@@ -117,7 +118,7 @@
                         </div>
 
                         <div class="input-field" id="alergiaField">
-                            <label>¿Tiene alergias?</label>
+                            <label>¿Es alérgico/a a algo?</label>
                             <select name="alergia" id="alergia" onchange="toggleDetail('detalleAlergia')">
                                 <option value="">Seleccione</option>
                                 <option value="si">Sí</option>
@@ -195,6 +196,31 @@
             const sustanciaSelect = document.getElementById('sustancia');
             const alergiaSelect = document.getElementById('alergia');
             const enfermedadSelect = document.getElementById('enfermedad');
+            const cedulaInput = document.getElementById('cedulaInput');
+            const mensajePaciente = document.getElementById('mensajePaciente');
+
+            cedulaInput.addEventListener('input', async () => {
+                const cedula = cedulaInput.value;
+        
+                if (cedula) {
+                    try {
+                        const response = await fetch(`/api/buscarCedula/${cedula}`); 
+                        const result = await response.json();
+        
+                        if (result.existe) {
+                            mensajePaciente.style.display = 'block';
+                            mensajePaciente.textContent = `Ya existe un paciente registrado con esa cédula: ${result.nombre} ${result.apellido}`;
+                        } else {
+                            mensajePaciente.style.display = 'none';
+                        }
+                    } catch (error) {
+                        console.error('Error al verificar la cédula:', error);
+                        mensajePaciente.style.display = 'none'; 
+                    }
+                } else {
+                    mensajePaciente.style.display = 'none'; 
+                }
+            });
             
             function updateFields() {
                 const userType = userSelect.value;

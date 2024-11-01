@@ -386,7 +386,7 @@
                 });
     
             } else {
-                window.location.href = 'login.html';
+                window.location.href = '../login.html';
             }  
             
             obtenerConsultasPaciente();
@@ -500,7 +500,6 @@
             }
         }
         
-        // Función para redirigir a medicalHistory.html con id_paciente e id_especialidad
         function verDetallePorEspecialidad(idPaciente, idEspecialidad) {
             if (!idEspecialidad) {
                 console.error('idEspecialidad está indefinido');
@@ -546,7 +545,7 @@
                     if (!response.ok) {
                         throw new Error('Error al cerrar sesión');
                     }
-                    window.location.href = 'login.html'; 
+                    window.location.href = '../login.html'; 
                 })
                 .catch(error => {
                     console.error('Error:', error);
