@@ -1,7 +1,6 @@
 const express = require('express');
 const client = require('./db');
 const router = express.Router();
-const sgMail = require('@sendgrid/mail');
 
 const obtenerPerfilesUsuarios = async () => {
   try {

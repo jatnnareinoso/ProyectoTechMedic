@@ -79,12 +79,6 @@
                             <input type="text" name="sintomas" placeholder="Ingrese el tiempo" required>
                         </div>
 
-                        <div class="input-field" id="pruebasRealizadasField">
-                            <label>Pruebas Realizadas</label>
-                            <button type="button" onclick="agregarPruebaRealizada()">Agregar Prueba Realizada</button>
-                            <div id="listaPruebasRealizadas" style="margin-top: 10px;"></div>
-                        </div>
-
                         <div class="input-field" id="pruebasField">
                             <label>Pruebas a Realizar</label>
                             <div style="margin-top: 10px;">
@@ -147,7 +141,6 @@
         }
 
         let contadorPruebasARealizar = 0;
-        let contadorPruebasRealizadas = 0;
 
         function agregarPruebaARealizar() {
             const nuevaPruebaInput = document.getElementById('nuevaPrueba');
@@ -163,22 +156,6 @@
             }
         }
 
-        function agregarPruebaRealizada() {
-            contadorPruebasRealizadas++;
-            const listaPruebasRealizadas = document.getElementById('listaPruebasRealizadas');
-            const nuevaPruebaRealizada = document.createElement('div');
-            nuevaPruebaRealizada.innerHTML = `
-                <div class="prueba-div">
-                    <label>Prueba Realizada ${contadorPruebasRealizadas}</label>
-                    <input type="text" name="prueba${contadorPruebasRealizadas}" placeholder="Prueba" required>
-                    <br><label>Resultado</label>
-                    <input type="text" name="resultado${contadorPruebasRealizadas}" placeholder="Resultado" required>
-                    <hr>
-                </div>
-            `;
-            listaPruebasRealizadas.appendChild(nuevaPruebaRealizada);
-        }
-
         document.getElementById('registrationForm').addEventListener('submit', async function(event) {
             event.preventDefault();
         
@@ -191,9 +168,9 @@
             const pruebas = document.getElementById('listaPruebas').value;
         
             const descripcion = `
-                ${detallesCondicion ? 'Condición médica: ' + detallesCondicion + '. ' : ''}
-                ${detallesMedicamentos ? 'Medicamentos: ' + detallesMedicamentos + '. ' : ''}
-                Síntomas: ${sintomas}.
+                ${detallesCondicion ? 'Condición médica preexistente: ' + detallesCondicion + '. ' : ''}
+                ${detallesMedicamentos ? 'Medicamentos que toma: ' + detallesMedicamentos + '. ' : ''}
+                Hace que tiempo empezaron los síntomas: ${sintomas}.
             `.trim();
         
             const fecha_hora = new Date().toISOString();
@@ -201,9 +178,8 @@
             const id_cita = new URLSearchParams(window.location.search).get('id_cita');
             const id_especialidad = document.getElementById('especialidad').value;
         
-            const pruebasResultados = [];
+            /*const pruebasResultados = [];
             const listaPruebasDivs = document.querySelectorAll('#listaPruebasRealizadas > div');
-            
         
             listaPruebasDivs.forEach((div, index) => {
                 const prueba = div.querySelector(`input[name="prueba${index + 1}"]`).value;
@@ -211,7 +187,7 @@
                 pruebasResultados.push(`Prueba: ${prueba}, Resultado: ${resultado}`);
             });
         
-            const resultados_pruebas = pruebasResultados.join('; ');
+            const resultados_pruebas = pruebasResultados.join('; '); */
         
             const requestBody = {
                 motivo,
@@ -222,7 +198,7 @@
                 notas_internas: notasInternas,
                 notas_externas: notasExternas,
                 pruebas,
-                resultados_pruebas, 
+                /* resultados_pruebas, */
                 id_especialidad
             };
         
@@ -236,7 +212,7 @@
                 const result = await response.json();
                 if (response.ok) {
                     alert('Consulta guardada exitosamente');
-                    window.location.href = './menu/listaCitas-asis.html';
+                    window.location.href = './menu/listaConsultas-asis.html';
                 } else {
                     alert(result.message);
                 }

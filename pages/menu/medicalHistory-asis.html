@@ -78,22 +78,23 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link" href="listaConsultas-asis.html">
+                    <i class="fa-solid fa-stethoscope"></i>
+                    <span>Consultas</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link" href="../menu/calendarAsis.html">
                     <i class="fa-solid fa-calendar-days"></i>
                     <span>Calendario</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="message-asis.html">
                     <i class="fa-regular fa-envelope"></i>
                     <span>Mensajería</span>
                 </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span>Informaciones</span></a>
             </li>
 
         </ul>
@@ -316,10 +317,8 @@
                                     <p><em>${consulta.motivo}</em></p>
                                     <h4>Descripción</h4>
                                     <p>${consulta.descripcion}</p>
-                                    <h4>Pruebas</h4>
+                                    <h4>Pruebas a realizar</h4>
                                     <p>${consulta.pruebas ? consulta.pruebas : 'No hay pruebas a realizar'}</p>
-                                    <h4>Resultados de Pruebas</h4>
-                                    <p>${consulta.resultados_pruebas ? consulta.resultados_pruebas : 'No hay pruebas realizadas'}</p>
                                     <h4>Notas Internas</h4>
                                     <p>${consulta.notas_internas}</p>
                                     <h4>Notas Externas</h4>

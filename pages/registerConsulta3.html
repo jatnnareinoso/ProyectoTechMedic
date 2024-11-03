@@ -79,12 +79,6 @@
                             <input type="text" name="sintomas" placeholder="Ingrese el tiempo" required>
                         </div>
 
-                        <div class="input-field" id="pruebasRealizadasField">
-                            <label>Pruebas Realizadas</label>
-                            <button type="button" onclick="agregarPruebaRealizada()">Agregar Prueba Realizada</button>
-                            <div id="listaPruebasRealizadas" style="margin-top: 10px;"></div>
-                        </div>
-
                         <div class="input-field" id="pruebasField">
                             <label>Pruebas a Realizar</label>
                             <div style="margin-top: 10px;">
@@ -147,7 +141,6 @@
         }
 
         let contadorPruebasARealizar = 0;
-        let contadorPruebasRealizadas = 0;
 
         function agregarPruebaARealizar() {
             const nuevaPruebaInput = document.getElementById('nuevaPrueba');
@@ -163,7 +156,7 @@
             }
         }
 
-        function agregarPruebaRealizada() {
+        /*function agregarPruebaRealizada() {
             contadorPruebasRealizadas++;
             const listaPruebasRealizadas = document.getElementById('listaPruebasRealizadas');
             const nuevaPruebaRealizada = document.createElement('div');
@@ -177,7 +170,7 @@
                 </div>
             `;
             listaPruebasRealizadas.appendChild(nuevaPruebaRealizada);
-        }
+        }*/
 
         document.getElementById('registrationForm').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -191,9 +184,9 @@
             const pruebas = document.getElementById('listaPruebas').value;
         
             const descripcion = `
-                ${detallesCondicion ? 'Condición médica: ' + detallesCondicion + '. ' : ''}
-                ${detallesMedicamentos ? 'Medicamentos: ' + detallesMedicamentos + '. ' : ''}
-                Síntomas: ${sintomas}.
+                ${detallesCondicion ? 'Condición médica preexistente: ' + detallesCondicion + '. ' : ''}
+                ${detallesMedicamentos ? 'Medicamentos que toma: ' + detallesMedicamentos + '. ' : ''}
+                Hace que tiempo empezaron los síntomas: ${sintomas}.
             `.trim();
         
             const fecha_hora = new Date().toISOString();
@@ -201,7 +194,7 @@
             const id_cita = new URLSearchParams(window.location.search).get('id_cita');
             const id_especialidad = document.getElementById('especialidad').value;
         
-            const pruebasResultados = [];
+            /*const pruebasResultados = [];
             const listaPruebasDivs = document.querySelectorAll('#listaPruebasRealizadas > div');
             
         
@@ -211,7 +204,7 @@
                 pruebasResultados.push(`Prueba: ${prueba}, Resultado: ${resultado}`);
             });
         
-            const resultados_pruebas = pruebasResultados.join('; ');
+            const resultados_pruebas = pruebasResultados.join('; ');*/
         
             const requestBody = {
                 motivo,
@@ -222,7 +215,7 @@
                 notas_internas: notasInternas,
                 notas_externas: notasExternas,
                 pruebas,
-                resultados_pruebas, 
+                /*resultados_pruebas, */
                 id_especialidad
             };
         
@@ -236,7 +229,7 @@
                 const result = await response.json();
                 if (response.ok) {
                     alert('Consulta guardada exitosamente');
-                    window.location.href = './menu/listaCitas.html';
+                    window.location.href = './menu/listaConsultas.html';
                 } else {
                     alert(result.message);
                 }

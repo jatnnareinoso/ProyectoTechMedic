@@ -1,7 +1,10 @@
 const express = require('express');
 const client = require('./db'); 
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 
+router.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 router.get('/paciente/:id_paciente', async (req, res) => {
     const idPaciente = req.params.id_paciente;
@@ -28,7 +31,7 @@ router.get('/consultas/paciente/:id_paciente', async (req, res) => {
             `SELECT 
                 c.id_cita,
                 c.fecha_hora AS fecha_consulta,
-                e.id_especialidad,          -- Selecciona el id_especialidad
+                e.id_especialidad,
                 e.especialidad AS especialidad, 
                 CONCAT(u.nombre, ' ', u.apellido) AS doctor
             FROM 
@@ -74,7 +77,6 @@ router.get('/consultas/paciente/:id_paciente', async (req, res) => {
     }
 });
 
-
 router.get('/consultas/pacientes/:id_paciente/especialidad/:id_especialidad', async (req, res) => {
     const { id_paciente, id_especialidad } = req.params;
 
@@ -91,7 +93,11 @@ router.get('/consultas/pacientes/:id_paciente/especialidad/:id_especialidad', as
                 c.notas_internas,
                 c.notas_externas,
                 c.pruebas,
-                c.resultados_pruebas
+                diag.descripcion AS diagnostico_descripcion,
+                diag.observacion AS diagnostico_observacion,
+                diag.ruta_archivos AS diagnostico_ruta_archivos,
+                diag.resultado_pruebas AS diagnostico_resultado_pruebas,
+                diag.estado AS diagnostico_estado
             FROM 
                 consulta c
             JOIN 
@@ -102,6 +108,8 @@ router.get('/consultas/pacientes/:id_paciente/especialidad/:id_especialidad', as
                 doctor d ON ct.id_doctor = d.id_doctor
             JOIN 
                 usuario u ON d.id_usuario = u.id_usuario
+            LEFT JOIN 
+                diagnostico diag ON c.id_consulta = diag.id_consulta
             WHERE 
                 ct.id_paciente = $1
                 AND c.id_especialidad = $2
@@ -111,18 +119,41 @@ router.get('/consultas/pacientes/:id_paciente/especialidad/:id_especialidad', as
             [id_paciente, id_especialidad]
         );
 
-        const consultas = result.rows.map(row => ({
-            id_cita: row.id_cita,
-            fecha_consulta: row.fecha_consulta,
-            doctor: row.doctor,
-            motivo: row.motivo,
-            descripcion: row.descripcion,
-            estado: row.estado,
-            notas_internas: row.notas_internas,
-            notas_externas: row.notas_externas,
-            pruebas: row.pruebas,
-            resultados_pruebas: row.resultados_pruebas
-        }));
+        console.log('Resultado de la consulta:', result.rows); // Agregado para debugging
+
+        const consultas = result.rows.map(row => {
+            let rutas = null;
+            if (row.diagnostico_ruta_archivos) {
+                try {
+                    rutas = JSON.parse(row.diagnostico_ruta_archivos).map(ruta => {
+                        // Usa encodeURIComponent para codificar la ruta del archivo
+                        return `/uploads/${encodeURIComponent(path.basename(ruta))}`;
+                    });
+                } catch (error) {
+                    console.warn("Error al parsear el campo rutas:", error);
+                    rutas = null; 
+                }
+            }
+        
+            return {
+                id_cita: row.id_cita,
+                fecha_consulta: row.fecha_consulta,
+                doctor: row.doctor,
+                motivo: row.motivo,
+                descripcion: row.descripcion,
+                estado: row.estado,
+                notas_internas: row.notas_internas,
+                notas_externas: row.notas_externas,
+                pruebas: row.pruebas,
+                diagnostico: {
+                    descripcion: row.diagnostico_descripcion,
+                    observacion: row.diagnostico_observacion,
+                    rutas: rutas,
+                    resultado_pruebas: row.diagnostico_resultado_pruebas,
+                    estado: row.diagnostico_estado
+                }
+            };
+        });
 
         res.json(consultas);
     } catch (error) {
@@ -131,6 +162,5 @@ router.get('/consultas/pacientes/:id_paciente/especialidad/:id_especialidad', as
     }
 });
 
-
-
 module.exports = router;
+

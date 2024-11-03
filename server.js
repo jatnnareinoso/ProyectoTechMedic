@@ -1,6 +1,8 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
+const multer = require('multer');
+const bodyParser = require('body-parser');
 const client = require('./design/js/db');
 const userRoutes = require('./design/js/userRoutes');
 const login = require('./design/js/login');
@@ -14,6 +16,8 @@ const usuarioRouter = require('./design/js/usuario');
 const  {buscarUsuarios } = require('./design/js/listaUsuarios');
 const consultaRoutes = require('./design/js/consulta');
 const historialRoutes = require('./design/js/historial-paciente');
+const notificacionesRoutes = require('./design/js/mensajes');
+const diagnosticoRoutes = require('./design/js/diagnostico');
 
 const app = express();
 const port = 3003;
@@ -45,6 +49,10 @@ app.post('/api/logout', (req, res) => {
 app.use('/api', userRoutes(client)); 
 
 app.use('/api/usuario', usuarioRouter);
+
+app.use('/api/notificacion', notificacionesRoutes);
+
+app.use('/api/diagnostico', diagnosticoRoutes);
 
 app.get('/api/pacientes', async (req, res) => {
     try {
@@ -169,6 +177,22 @@ app.use('/api/consulta', consultaRoutes);
 app.use('/api/historial', historialRoutes);
 
 app.use('/api/', asistenteDoctorRoutes);
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, 'uploads/'); 
+  },
+  filename: function (req, file, cb) {
+      cb(null, Date.now() + path.extname(file.originalname)); // Nombre del archivo
+  }
+});
+
+const upload = multer({ storage: storage });
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './pages/login.html'));

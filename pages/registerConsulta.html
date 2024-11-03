@@ -165,9 +165,9 @@
             const pruebas = document.getElementById('listaPruebas').value;
 
             const descripcion = `
-                ${detallesCondicion ? 'Condición médica: ' + detallesCondicion + '. ' : ''}
-                ${detallesMedicamentos ? 'Medicamentos: ' + detallesMedicamentos + '. ' : ''}
-                Síntomas: ${sintomas}.
+                ${detallesCondicion ? 'Condición médica preexistente: ' + detallesCondicion + '. ' : ''}
+                ${detallesMedicamentos ? 'Medicamentos que toma: ' + detallesMedicamentos + '. ' : ''}
+                Hace que tiempo empezaron los síntomas: ${sintomas}.
             `.trim();
 
             const fecha_hora = new Date().toISOString();
@@ -184,7 +184,6 @@
                 notas_internas: notasInternas,
                 notas_externas: notasExternas,
                 pruebas,
-                resultados_pruebas: null,
                 id_especialidad
             };
 
@@ -198,7 +197,7 @@
                 const result = await response.json();
                 if (response.ok) {
                     alert('Consulta guardada exitosamente');
-                    window.location.href = './menu/listaCitas.html';
+                    window.location.href = './menu/listaConsultas.html';
                 } else {
                     alert(result.message);
                 }

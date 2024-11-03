@@ -47,21 +47,26 @@ module.exports = (client) => {
 
     router.post('/especialidades', async (req, res) => {
         const { especialidad, descripcion, estado } = req.body;
-
+    
         try {
             const result = await client.query(
                 'INSERT INTO especialidad (especialidad, descripcion, estado) VALUES ($1, $2, $3) RETURNING *',
                 [especialidad, descripcion, estado]
             );
-
-            res.status(201).json(result.rows[0]);
+    
+            const nuevaEspecialidad = result.rows[0];
+    
+            await client.query(
+                'INSERT INTO accesos (id_especialidad, modulo, estado) VALUES ($1, $2, $3)',
+                [nuevaEspecialidad.id_especialidad, nuevaEspecialidad.especialidad, true]
+            );
+    
+            res.status(201).json(nuevaEspecialidad);
         } catch (error) {
             console.error('Error al agregar la especialidad:', error);
             res.status(500).send('Error interno del servidor');
         }
     });
-    
-    
 
     router.post('/register', async (req, res) => {
         const {

@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>TechMedic - Citas</title>
+    <title>TechMedic - Consultas</title>
     
     <script src="https://kit.fontawesome.com/c2b1422a44.js" crossorigin="anonymous"></script>
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -97,11 +97,12 @@
         outline: none;
     }
 
-    .edit-cita-btn {
+    .edit-consulta-btn {
         background-color: whitesmoke;  
         border: none;    
         transition: background-color 0.3s;
     }
+
 
 </style>
 
@@ -135,14 +136,14 @@
                 </a>
             </li>
 
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="../menu/listaCitas.html">
                     <i class="fa-solid fa-hospital-user"></i>
                     <span>Citas</span>
                 </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="listaConsultas.html">
                     <i class="fa-solid fa-stethoscope"></i>
                     <span>Consultas</span>
@@ -308,15 +309,14 @@
                                     <thead>
                                         <tr>
                                             <th> <span>Paciente</span></th>
-                                            <th> <span>Asistente</span></th>
-                                            <th> <span>Correo</span></th>
-                                            <th> <span>Tipo de Consulta</span></th>
+                                            <th> <span>Especialidad</span></th>
+                                            <th> <span>Motivo Consulta</span></th>
                                             <th><span>Fecha y Hora</span></th>
                                             <th class="text-center"><span>Estado</span></th>
                                             <th>&nbsp;</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="tabla-citas"></tbody>
+                                    <tbody id="tabla-consultas"></tbody>
                                 </table>
                                 <center>
                                     <div class="btn-next">
@@ -329,22 +329,34 @@
                     </div>
                 </div>
                 
-                <div id="editCitaModal" class="modal">
+                <div id="editConsultaModal" class="modal">
                     <div class="modal-content">
                         <span class="close" id="closeModal">&times;</span>
-                        <h2>Editar Cita</h2>
+                        <h2>Editar Consulta</h2>
                         
                         <label for="editPaciente">Paciente:</label>
-                        <select id="editPaciente" required></select>
+                        <select id="editPaciente" disabled></select>
+                        
+                        <label for="editEspecialidad">Especialidad:</label>
+                        <select id="editEspecialidad" required> </select>
                 
-                        <label for="editAsistente">Asistente:</label>
-                        <select id="editAsistente" required></select>
+                        <label for="editMotivo">Motivo:</label>
+                        <input id="editMotivo" required>
                 
-                        <label for="editTipoConsulta">Tipo de Consulta:</label>
-                        <select id="editTipoConsulta" required></select>
+                        <label for="editDescripcion">Descripcion:</label>
+                        <input id="editDescripcion" required>
                 
                         <label for="editFechaHora">Fecha y Hora:</label>
                         <input type="datetime-local" id="editFechaHora" required>
+
+                        <label for="editNotasInternas">Notas Internas:</label>
+                        <input id="editNotasInternas" required>
+
+                        <label for="editNotasExternas">Notas Externas:</label>
+                        <input id="editNotasExternas" required>
+
+                        <label for="editPruebas">Pruebas:</label>
+                        <input id="editPruebas" required>
                 
                         <label for="editEstado">Estado:</label>
                         <select id="editEstado" required>
@@ -358,15 +370,15 @@
                 
                 <script>
                     function cerrarModal() {
-                        document.getElementById('editCitaModal').style.display = 'none';
+                        document.getElementById('editConsultaModal').style.display = 'none';
                     }
                 
                     document.addEventListener('DOMContentLoaded', async () => {
                         let currentPage = 1;
                         const recordsPerPage = 5;
                         let idDoctor = null;
-                        let citas = [];
-                        let allCitas = [];
+                        let consultas = [];
+                        let allConsultas = [];
                 
                         const user = JSON.parse(localStorage.getItem('user'));
                 
@@ -383,7 +395,7 @@
                 
                             if (data.id_doctor) {
                                 idDoctor = data.id_doctor;
-                                await cargarCitas(idDoctor);
+                                await cargarConsultas(idDoctor);
                             } else {
                                 console.error('No se encontró el ID del doctor:', data);
                             }
@@ -391,53 +403,43 @@
                             console.error('Error al obtener id_doctor:', error);
                         }
                 
-                        async function cargarCitas(idDoctor) {
+                        async function cargarConsultas(idDoctor) {
                             try {
-                                const response = await fetch(`/api/cita/citasDoctor?id_doctor=${idDoctor}`);
-                                allCitas = await response.json();
-                
-                                if (Array.isArray(allCitas) && allCitas.length > 0) {
-                                    citas = allCitas;
+                                const response = await fetch(`/api/consulta/consultasDoctor?id_doctor=${idDoctor}`);
+                                allConsultas = await response.json();
+                                
+                                if (Array.isArray(allConsultas) && allConsultas.length > 0) {
+                                    consultas = allConsultas;
                                     renderPage(currentPage);
                                 } else {
-                                    console.error('No se encontraron citas:', allCitas);
+                                    console.error('No se encontraron consultas:', allConsultas);
                                 }
                             } catch (error) {
-                                console.error('Error al obtener las citas:', error);
+                                console.error('Error al obtener las consultas:', error);
                             }
                         }
                 
                         function renderPage(page) {
                             const start = (page - 1) * recordsPerPage;
                             const end = page * recordsPerPage;
-                            const paginaCitas = citas.slice(start, end);
-                
-                            const tablaCitas = document.getElementById('tabla-citas');
-                            tablaCitas.innerHTML = '';
-                
-                            paginaCitas.forEach((cita) => {
-                                let editUrl;
-                
-                                if (cita.consulta === 'Consulta Inicial') {
-                                    editUrl = `../registerConsulta.html?id_cita=${cita.id_cita}`;
-                                } else if (cita.consulta === 'Consulta de Seguimiento') {
-                                    editUrl = `../registerConsulta2.html?id_cita=${cita.id_cita}`;
-                                } else if (cita.consulta === 'Consulta de Emergencia') {
-                                    editUrl = `../registerConsulta3.html?id_cita=${cita.id_cita}`;
-                                } else {
-                                    editUrl = `../listaCitas.html`;
-                                }
-                
+                            const paginaConsultas = consultas.slice(start, end);
+                    
+                            const tablaConsultas = document.getElementById('tabla-consultas');
+                            tablaConsultas.innerHTML = '';
+                    
+                            paginaConsultas.forEach((consulta) => {
+
+                                const editUrl = `../registerDiagnostico.html?id_consulta=${consulta.id_consulta}`;
+
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
-                                    <td> <a class="user-link">${cita.nombre_paciente} ${cita.apellido_paciente}</a></td>
-                                    <td>${cita.nombre_asistente} ${cita.apellido_asistente}</td>
-                                    <td><a class="user-link">${cita.correo}</a></td>
-                                    <td>${cita.consulta}</td>
-                                    <td>${new Date(cita.fecha_hora).toLocaleString()}</td>
-                                    <td>${cita.estado ? 'Activo' : 'Inactivo'}</td>
+                                    <td>${consulta.nombre_paciente}</td>
+                                    <td>${consulta.especialidad}</td>
+                                    <td>${consulta.motivo}</td>
+                                    <td>${new Date(consulta.fecha_consulta).toLocaleString()}</td>
+                                    <td>${consulta.estado ? 'Activo' : 'Inactivo'}</td>
                                     <td style="width: 10%; text-align: center;">
-                                        <button class="edit-cita-btn table-link" data-id-cita="${cita.id_cita}">
+                                        <button class="edit-consulta-btn table-link" data-id-consulta="${consulta.id_consulta}">
                                             <span class="fa-stack fa-sm">
                                                 <i class="fa fa-square fa-stack-2x"></i>
                                                 <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
@@ -451,16 +453,16 @@
                                         </a>
                                     </td>
                                 `;
-                                tablaCitas.appendChild(row);
-                
-                                row.querySelector('.edit-cita-btn').addEventListener('click', function (event) {
-                                    const id_cita = event.currentTarget.getAttribute('data-id-cita');
-                                    abrirModal(id_cita);
+                                tablaConsultas.appendChild(row);
+                    
+                                row.querySelector('.edit-consulta-btn').addEventListener('click', function (event) {
+                                    const id_consulta = event.currentTarget.getAttribute('data-id-consulta');
+                                    abrirModal(id_consulta);
                                 });
                             });
-                
+                    
                             document.getElementById('prevButton').disabled = currentPage === 1;
-                            document.getElementById('nextButton').disabled = currentPage * recordsPerPage >= citas.length;
+                            document.getElementById('nextButton').disabled = currentPage * recordsPerPage >= consultas.length;
                         }
                 
                         document.getElementById('prevButton').addEventListener('click', () => {
@@ -471,7 +473,7 @@
                         });
                 
                         document.getElementById('nextButton').addEventListener('click', () => {
-                            if (currentPage * recordsPerPage < citas.length) {
+                            if (currentPage * recordsPerPage < consultas.length) {
                                 currentPage++;
                                 renderPage(currentPage);
                             }
@@ -487,14 +489,14 @@
                             const endDate = document.getElementById('endDate').value;
                             const estado = document.getElementById('filterStatus').value;
                         
-                            citas = allCitas.filter(cita => {
-                                const citaFecha = new Date(cita.fecha_hora);
+                            consultas = allConsultas.filter(consulta => {
+                                const consultaFecha = new Date(consulta.fecha_consulta);
                                 
                                 const adjustedEndDate = endDate ? new Date(new Date(endDate).setDate(new Date(endDate).getDate() + 1)) : null;
                         
-                                const cumpleFecha = (!startDate || citaFecha >= new Date(startDate)) &&
-                                                    (!adjustedEndDate || citaFecha < adjustedEndDate); 
-                                const cumpleEstado = !estado || (estado === 'active' ? cita.estado : !cita.estado);
+                                const cumpleFecha = (!startDate || consultaFecha >= new Date(startDate)) &&
+                                                    (!adjustedEndDate || consultaFecha < adjustedEndDate); 
+                                const cumpleEstado = !estado || (estado === 'active' ? consulta.estado : !consulta.estado);
                         
                                 return cumpleFecha && cumpleEstado;
                             });
@@ -505,40 +507,45 @@
                 
                         let currentEditId = null;
                 
-                        async function abrirModal(id_cita) {
+                        async function abrirModal(id_consulta) {
                             try {
-                                const response = await fetch(`/api/cita/citaId/${id_cita}`);
-                                const cita = await response.json();
-                
-                                if (cita) {
-                                    currentEditId = cita.id_cita;
-                
-                                    const fechaHora = new Date(cita.fecha_hora);
+                                const response = await fetch(`/api/consulta/consultaId/${id_consulta}`);
+                                const consulta = await response.json();
+                    
+                                if (consulta) {
+                                    currentEditId = consulta.id_consulta;
+
+                                    const fechaHora = new Date(consulta.fecha_consulta);
                                     const localFechaHora = new Date(fechaHora.getTime() - (fechaHora.getTimezoneOffset() * 60000));
                                     document.getElementById('editFechaHora').value = localFechaHora.toISOString().slice(0, 16);
-                
-                                    document.getElementById('editEstado').value = cita.estado ? 'true' : 'false'; 
-                
-                                    await cargarPacientes(cita.id_paciente);
-                                    await cargarAsistentes(cita.id_usuario);
-                                    await cargarTiposConsulta(cita.id_tipo_consulta);
-                
-                                    document.getElementById('editCitaModal').style.display = 'block';
+
+                                    document.getElementById('editMotivo').value = consulta.motivo;
+                                    document.getElementById('editDescripcion').value = consulta.descripcion;
+                                    document.getElementById('editNotasInternas').value = consulta.notas_internas;
+                                    document.getElementById('editNotasExternas').value = consulta.notas_externas;
+                                    document.getElementById('editPruebas').value = consulta.pruebas;
+                                    document.getElementById('editEstado').value = consulta.estado ? 'true' : 'false';
+                    
+                                    await cargarPacientes(consulta.id_paciente);
+                                    await cargarEspecialidades(consulta.id_especialidad);
+                    
+                                    document.getElementById('editConsultaModal').style.display = 'block';
                                 } else {
-                                    console.error('Cita no encontrada con id:', id_cita);
+                                    console.error('Consulta no encontrada:', consulta);
                                 }
                             } catch (error) {
-                                console.error('Error al obtener datos de la cita:', error);
+                                console.error('Error al obtener datos de la consulta:', error);
                             }
                         }
+                    
                 
                         async function cargarPacientes(selectedId) {
                             try {
                                 const response = await fetch(`/api/pacientes`);
                                 const pacientes = await response.json();
                                 const pacienteSelect = document.getElementById('editPaciente');
-                
-                                pacienteSelect.innerHTML = ''; 
+                    
+                                pacienteSelect.innerHTML = '';
                                 pacientes.forEach(paciente => {
                                     const option = document.createElement('option');
                                     option.value = paciente.id_paciente;
@@ -550,80 +557,62 @@
                                 console.error('Error al cargar pacientes:', error);
                             }
                         }
-                
-                        async function cargarAsistentes(selectedId) {
+                    
+                        async function cargarEspecialidades(selectedId) {
                             try {
-                                const response = await fetch(`/api/cita/asistentesDoctor?id_doctor=${idDoctor}`);
-                                const asistentes = await response.json();
-                                
-                                const asistenteSelect = document.getElementById('editAsistente');
-                                asistenteSelect.innerHTML = '';  
-                
-                                asistentes.forEach(asistente => {
+                                const response = await fetch('/api/especialidades');
+                                const especialidades = await response.json();
+                                const especialidadSelect = document.getElementById('editEspecialidad');
+                    
+                                especialidadSelect.innerHTML = '';
+                                especialidades.forEach(especialidad => {
                                     const option = document.createElement('option');
-                                    option.value = asistente.id_usuario;
-                                    option.textContent = `${asistente.nombre} ${asistente.apellido}`;
-                                    option.selected = asistente.id_usuario == selectedId;
-                                    asistenteSelect.appendChild(option);
+                                    option.value = especialidad.id_especialidad;
+                                    option.textContent = especialidad.especialidad;
+                                    option.selected = especialidad.id_especialidad == selectedId;
+                                    especialidadSelect.appendChild(option);
                                 });
                             } catch (error) {
-                                console.error('Error al cargar asistentes:', error);
+                                console.error('Error al cargar especialidades:', error);
                             }
                         }
-                
-                        async function cargarTiposConsulta(selectedId) {
-                            try {
-                                const response = await fetch('/api/cita/tipo_consulta');
-                                const tiposConsulta = await response.json();
-                                const tipoConsultaSelect = document.getElementById('editTipoConsulta');
-                
-                                tipoConsultaSelect.innerHTML = ''; 
-                                tiposConsulta.forEach(tipo => {
-                                    const option = document.createElement('option');
-                                    option.value = tipo.id_tipo_consulta; 
-                                    option.textContent = tipo.consulta; 
-                                    option.selected = tipo.id_tipo_consulta == selectedId;
-                                    tipoConsultaSelect.appendChild(option);
-                                });
-                            } catch (error) {
-                                console.error('Error al cargar tipos de consulta:', error);
-                            }
-                        }
-                
-                        document.getElementById('closeModal').addEventListener('click', cerrarModal);
-                        document.getElementById('btn-actualizar').addEventListener('click', actualizarCita);
-
-                
-                        async function actualizarCita() {
+                    
+                        document.getElementById('closeModal').addEventListener('click', () => {
+                            document.getElementById('editConsultaModal').style.display = 'none';
+                        });
+                    
+                        document.getElementById('btn-actualizar').addEventListener('click', async () => {
                             const data = {
-                                id_cita: currentEditId,
-                                id_paciente: document.getElementById('editPaciente').value,
-                                id_usuario: document.getElementById('editAsistente').value,
-                                id_tipo_consulta: document.getElementById('editTipoConsulta').value,
+                                id_consulta: currentEditId,
+                                id_especialidad: document.getElementById('editEspecialidad').value,
+                                motivo: document.getElementById('editMotivo').value,
+                                descripcion: document.getElementById('editDescripcion').value,
                                 fecha_hora: document.getElementById('editFechaHora').value,
+                                notas_internas: document.getElementById('editNotasInternas').value,
+                                notas_externas: document.getElementById('editNotasExternas').value,
+                                pruebas: document.getElementById('editPruebas').value,
                                 estado: document.getElementById('editEstado').value === 'true',
-                                id_doctor: idDoctor,
-                                id_centro_medico: 1
                             };
-                
+                    
                             try {
-                                const response = await fetch(`/api/cita/actualizarCita/${currentEditId}`, {
+                                const response = await fetch(`/api/consulta/actualizarConsulta`, {
                                     method: 'PUT',
                                     headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(data)
+                                    body: JSON.stringify(data),
                                 });
-                
-                                if (response.ok) {
-                                    alert('Cita actualizada correctamente');
-                                    await cargarCitas(idDoctor);
+                    
+                                const resultado = await response.json();
+                                if (resultado.success) {
+                                    alert('Consulta actualizada con éxito.');
+                                    await cargarConsultas(idDoctor);
                                     cerrarModal();
                                 } else {
-                                    console.error('Error al actualizar la cita:', await response.text());
+                                    alert('Error al actualizar la consulta.');
                                 }
                             } catch (error) {
-                                console.error('Error en la solicitud de actualización:', error);
+                                console.error('Error al actualizar la consulta:', error);
                             }
-                        }
+                        });
                     });
                 </script>
                 

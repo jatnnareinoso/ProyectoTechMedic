@@ -50,7 +50,7 @@
 
             <hr class="sidebar-divider my-0">
 
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="../profileDC.html">
                     <i class="fa-solid fa-user-doctor"></i>
                     <span>Sobre Mi</span></a>
@@ -58,7 +58,7 @@
 
             <hr class="sidebar-divider">
 
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="../menu/listpacient.html">
                     <i class="fa-solid fa-hospital-user"></i>
                     <span>Pacientes</span>
@@ -73,14 +73,14 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="listaConsultas.html">
                     <i class="fa-solid fa-stethoscope"></i>
-                    <span>Historial Clínico</span>
+                    <span>Consultas</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="message-dc.html">
                     <i class="fa-regular fa-envelope"></i>
                     <span>Mensajería</span>
                 </a>
@@ -96,12 +96,6 @@
                 <a class="nav-link" href="#">
                     <i class="fa-solid fa-briefcase"></i>
                     <span>Permisos</span></a>
-            </li>
-
-               <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span>Informaciones</span></a>
             </li>
 
         </ul>
@@ -241,11 +235,22 @@
                             const consultas = await response.json();
                 
                             const contenedorConsultas = document.getElementById('resume');
-                            contenedorConsultas.innerHTML = ''; 
+                            contenedorConsultas.innerHTML = '';
                 
                             consultas.forEach(consulta => {
                                 const consultaDiv = document.createElement('div');
                                 consultaDiv.className = 'resume-item pb-0';
+                
+                                // Ahora extraemos las rutas de archivos como un arreglo
+                                let archivosHtml = '';
+                                if (consulta.diagnostico.rutas && consulta.diagnostico.rutas.length > 0) {
+                                    // Convertimos la cadena JSON a un arreglo de rutas
+                                    archivosHtml = consulta.diagnostico.rutas.map(ruta => `
+                                        <a href="${ruta}" download>Descargar archivo</a>
+                                    `).join('<br>');
+                                } else {
+                                    archivosHtml = 'No hay archivos adjuntos';
+                                }
                 
                                 consultaDiv.innerHTML = `
                                     <h4>Dr. ${consulta.doctor}</h4>
@@ -254,14 +259,19 @@
                                     <p><em>${consulta.motivo}</em></p>
                                     <h4>Descripción</h4>
                                     <p>${consulta.descripcion}</p>
-                                    <h4>Pruebas</h4>
+                                    <h4>Pruebas a realizar</h4>
                                     <p>${consulta.pruebas ? consulta.pruebas : 'No hay pruebas a realizar'}</p>
-                                    <h4>Resultados de Pruebas</h4>
-                                    <p>${consulta.resultados_pruebas ? consulta.resultados_pruebas : 'No hay pruebas realizadas'}</p>
                                     <h4>Notas Internas</h4>
                                     <p>${consulta.notas_internas}</p>
                                     <h4>Notas Externas</h4>
                                     <p>${consulta.notas_externas}</p>
+                                    <h4>Diagnóstico</h4>
+                                    <p><strong>Descripción:</strong> ${consulta.diagnostico.descripcion || 'No hay diagnóstico'}</p>
+                                    <p><strong>Observación:</strong> ${consulta.diagnostico.observacion || 'No hay observación'}</p>
+                                    <p><strong>Resultado de Pruebas:</strong> ${consulta.diagnostico.resultado_pruebas || 'Sin resultados'}</p>
+                                    <p><strong>Estado:</strong> ${consulta.diagnostico.estado ? 'Activo' : 'Inactivo'}</p>
+                                    <h4>Archivos del Diagnóstico</h4>
+                                    <p>${archivosHtml}</p>
                                 `;
                 
                                 contenedorConsultas.appendChild(consultaDiv);
@@ -273,7 +283,7 @@
                 
                     document.addEventListener('DOMContentLoaded', cargarConsultas);
                 </script>
-                
+                   
             </div>
         </div>
 

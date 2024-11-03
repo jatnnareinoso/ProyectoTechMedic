@@ -62,7 +62,7 @@
                         </div>
 
                         <div class="input-field" id="pruebasField">
-                            <label>Pruebas Realizadas</label>
+                            <label>Pruebas a Realizar</label>
                             <button type="button" onclick="agregarPrueba()">Agregar Prueba</button>
                             <div id="listaPruebas" style="margin-top: 10px;"></div>
                         </div>
@@ -125,6 +125,20 @@
         let contadorPruebas = 0;
 
         function agregarPrueba() {
+            const nuevaPruebaInput = document.getElementById('nuevaPrueba');
+            const listaPruebas = document.getElementById('listaPruebas');
+
+            const nuevaPrueba = nuevaPruebaInput.value.trim();
+            if (nuevaPrueba) {
+                contadorPruebas++;
+                listaPruebas.value += `Prueba ${contadorPruebas}: ${nuevaPrueba}\n`;
+                nuevaPruebaInput.value = '';
+            } else {
+                alert('Por favor, ingrese el nombre de la prueba.');
+            }
+        }
+
+        /*function agregarPrueba() {
             contadorPruebas++;
             const listaPruebas = document.getElementById('listaPruebas');
             const nuevaPrueba = document.createElement('div');
@@ -138,7 +152,7 @@
                 </div>
             `;
             listaPruebas.appendChild(nuevaPrueba);
-        }
+        }*/
 
         document.getElementById('registrationForm').addEventListener('submit', async function(event) {
             event.preventDefault(); 
@@ -148,7 +162,7 @@
             const notasInternas = this.notasinternas.value;
             const sintomas = document.getElementById('sintomas').value;
 
-            const pruebasResultados = [];
+            /*const pruebasResultados = [];
             const listaPruebasDivs = document.querySelectorAll('#listaPruebas > div');
 
             listaPruebasDivs.forEach((div, index) => {
@@ -157,10 +171,10 @@
                 pruebasResultados.push(`Prueba: ${prueba}, Resultado: ${resultado}`);
             });
 
-            const resultados_pruebas = pruebasResultados.join('; ');
+            const resultados_pruebas = pruebasResultados.join('; '); */
 
-            const descripcion = `Síntomas: ${sintomas}`.trim();
-
+            const descripcion = `Nuevos síntomas o cambios presentados: ${sintomas}`.trim();
+            const pruebas = document.getElementById('listaPruebas').value;
             const fecha_hora = new Date().toISOString();
             const estado = 'activo';
             const id_cita = new URLSearchParams(window.location.search).get('id_cita');
@@ -174,8 +188,8 @@
                 id_cita,
                 notas_internas: notasInternas,
                 notas_externas: notasExternas,
-                pruebas: '', 
-                resultados_pruebas, 
+                pruebas, 
+                /*resultados_pruebas, */
                 id_especialidad
             };
 
@@ -189,7 +203,7 @@
                 const result = await response.json();
                 if (response.ok) {
                     alert('Consulta guardada exitosamente');
-                    window.location.href = './menu/listaCitas.html';
+                    window.location.href = './menu/listaConsultas.html';
                 } else {
                     alert(result.message);
                 }
