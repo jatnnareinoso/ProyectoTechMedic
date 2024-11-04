@@ -560,7 +560,8 @@
             
             if (user && id_paciente) {
                 
-                const requestText = document.getElementById('requestText').value;
+                const requestTextInput = document.getElementById('requestText')
+                const requestText = requestTextInput.value;
                 const errorRequestMessageDiv = document.querySelector('#error-request-message');
                 
                 try {
@@ -572,12 +573,15 @@
                     
                     const data = await response.json();
 
-                    alert('Solicitud de acceso enviada correctamente')
-                    
                     
                     if (response.ok) {
                         closeRequestModal();
-                        // Agregar una funcion que remueva el acceso que se acabo de solicitar
+                        // TODO: Agregar una funcion que remueva el acceso que se acabo de solicitar
+                        
+                        alert('Solicitud de acceso enviada correctamente')
+                        requestTextInput.value = '';
+                        errorRequestMessageDiv.textContent = '';
+                        
                     } else {
                         errorRequestMessageDiv.textContent = data.error;
                     }

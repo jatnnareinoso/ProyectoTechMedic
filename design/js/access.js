@@ -22,6 +22,8 @@ router.get("/list/faltantes/:id_usuario", async (req, res) => {
         res.status(500).send("Error al obtener el listado de accesos");
     }
 });
+// TODO: quitar los accesos de las especialidades del doctor
+
 
 // Obtener el listado de accesos que un usuario ya ha solicitado
 router.get("/list/solicitadas/:id_usuario", async (req, res) => {
