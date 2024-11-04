@@ -252,109 +252,25 @@
                                     <h4 class="card-title mb-4">Documentos Medicos</h4>
                 
                                     <div class="row">
-                                        <div class="col-xl-12">
-                                            <div class="task-list-box" id="landing-task">
-                                                <div id="task-item-1">
-                                                    <div class="card task-box rounded-3">
-                                                        <div class="card-body">
-                                                            <div class="row align-items-center">
-                                                                <div class="col-xl-6 col-sm-5">
-                                                                    <h5 class="form-check-label ms-1 task-title">Oftamologia</h5>
-                                                                </div>
-                                                                <div class="col-xl-6 col-sm-7">
-                                                                    <div class="row align-items-center">
-                                                                        <div class="col-xl-5 col-md-6 col-sm-5">
-                                                                            <label class="form-check-label ms-1 task-title">Dra. Laura Abreu</label>
-                                                                        </div>
-                                                                        <div class="col-xl-7 col-md-6 col-sm-7">
-                                                                            <div class="d-flex flex-wrap gap-3 mt-3 mt-xl-0 justify-content-md-end">
-                                                                                <div>
-                                                                                    <button type="button" class="btn btn-primary btn-sm w-5" onclick="openRequestModal()">SOLICITUD</button>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                
-                                            <div class="task-list-box" id="design-task">
-                                                <div id="task-item-2">
-                                                    <div class="card task-box rounded-3">
-                                                        <div class="card-body">
-                                                            <div class="row align-items-center">
-                                                                <div class="col-xl-6 col-sm-5">
-                                                                    <h5 class="form-check-label ms-1 task-title">Oncologia</h5>
-                                                                </div>
-                                                                <div class="col-xl-6 col-sm-7">
-                                                                    <div class="row align-items-center">
-                                                                        <div class="col-xl-5 col-md-6 col-sm-5">
-                                                                            <label class="form-check-label ms-1 task-title">Dra. Victor Peralda</label>
-                                                                        </div>
-                                                                        <div class="col-xl-7 col-md-6 col-sm-7">
-                                                                            <div class="d-flex flex-wrap gap-3 mt-3 mt-xl-0 justify-content-md-end">
-                                                                                <div>
-                                                                                    <button type="button" class="btn btn-primary btn-sm w-5" onclick="openRequestModal()">SOLICITUD</button>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                
-                                            <div class="task-list-box" id="blog-task">
-                                                <div id="task-item-3">
-                                                    <div class="card task-box rounded-3">
-                                                        <div class="card-body">
-                                                            <div class="row align-items-center">
-                                                                <div class="col-xl-6 col-sm-5">
-                                                                    <h5 class="form-check-label ms-1 task-title">Pediatria</h5>
-                                                                </div>
-                                                                <div class="col-xl-6 col-sm-7">
-                                                                    <div class="row align-items-center">
-                                                                        <div class="col-xl-5 col-md-6 col-sm-5">
-                                                                            <label class="form-check-label ms-1 task-title">Dr. Gustavo Ruiz</label>
-                                                                        </div>
-                                                                        <div class="col-xl-7 col-md-6 col-sm-7">
-                                                                            <div class="d-flex flex-wrap gap-3 mt-3 mt-xl-0 justify-content-md-end">
-                                                                                <div>
-                                                                                    <button type="button" class="btn btn-primary btn-sm w-5" onclick="openRequestModal()">SOLICITUD</button>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div id="access_list_container" class="col-xl-12"> </div>
 
-
-                                            <div id="requestModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); 
-                                                    background:white; border:1px solid #ccc; padding:20px; width:600px; height:400px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index:1000;">
-                                                <h4>Motivo de Solicitud</h4>
-                                                <textarea id="requestText" rows="10" style="width:100%; height:200px;"></textarea>
-                                                <div class="mt-3">
-                                                    <button onclick="sendRequest()" class="btn btn-primary">Enviar</button>
-                                                    <button onclick="closeRequestModal()" class="btn btn-secondary">Cerrar</button>
-                                                </div>
+                                        <div id="requestModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); 
+                                                background:white; border:1px solid #ccc; padding:20px; width:600px; height:400px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index:1000;">
+                                            <h4>Motivo de Solicitud</h4>
+                                            <textarea id="requestText" rows="10" style="width:100%; height:200px;"></textarea>
+                                            <div id="error-request-message" class="error-message"></div>
+                                            <div class="mt-3">
+                                                <button onclick="sendRequest()" class="btn btn-primary">Enviar</button>
+                                                <button onclick="closeRequestModal()" class="btn btn-secondary">Cerrar</button>
                                             </div>
-                                            
-                                            <div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999;"></div>
-                                            
                                         </div>
+                                        
+                                        <div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999;"></div>
+                                        
                                     </div>
                                 </div>
-                                
                             </div>
+                                
                         </div>
                     </div>
                 
@@ -459,7 +375,6 @@
                             </div>
                         </div>
                     </div>
-         
                 </div>     
             </div>
         </div>
@@ -513,6 +428,9 @@
                 document.querySelectorAll('.user-name').forEach(element => {
                     element.textContent = `${user.nombre} ${user.apellido}`;
                 });
+
+                obtenerListadoAccesos()
+
     
             } else {
                 window.location.href = '../login.html';
@@ -532,6 +450,53 @@
         document.getElementById('documentacion-link').href = `../menu/historyPC2.html?id_paciente=${id_paciente}`;
         document.getElementById('reporte-link').href = `../menu/historyPC3.html?id_paciente=${id_paciente}`;
 
+
+        function obtenerListadoAccesos() {
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            fetch(`/api/accesos/list/faltantes/${user.id_usuario}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al obtener el listado de accesos');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("data ", data);
+                renderAccessListItems(data)
+            })
+        }
+
+        function renderAccessListItems(accessListItems) {
+            const accessListContainer = document.querySelector('#access_list_container');
+
+            accessListItems.forEach((accessItem) => {
+                const taskListBox = document.createElement('div');
+
+                taskListBox.innerHTML= `
+                    <div class="task-list-box" id="landing-task">
+                        <div id="task-item-1">
+                            <div class="card task-box rounded-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="form-check-label ms-1 task-title">${accessItem.modulo}</h5>
+                                        <div>
+                                            <button type="button" class="btn btn-primary btn-sm w-5">SOLICITUD</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                // Selecciona el botón y agrega el evento click con accessItem como parámetro
+                const button = taskListBox.querySelector('button');
+                button.onclick = () => openRequestModal(accessItem);
+
+                accessListContainer.appendChild(taskListBox);
+            })
+
+        }
 
         function obtenerDetallesPaciente(id_paciente) {
             fetch(`/api/historial/paciente/${id_paciente}`)
@@ -570,8 +535,14 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        function openRequestModal() {
-            document.getElementById('requestModal').style.display = 'block';
+        function openRequestModal(accessItem) {
+            const requestModal = document.getElementById('requestModal')
+
+            requestModal.style.display = 'block';
+            requestModal.setAttribute('data-id-accesos', accessItem.id_accesos)
+            requestModal.setAttribute('data-id-especialidad', accessItem.id_especialidad)
+            requestModal.setAttribute('data-modulo', accessItem.modulo)
+
             document.getElementById('overlay').style.display = 'block';
         }
         
@@ -580,10 +551,46 @@
             document.getElementById('overlay').style.display = 'none';
         }
         
-        function sendRequest() {
-            const requestText = document.getElementById('requestText').value;
-            alert("Solicitud enviada: " + requestText); // Aquí puedes agregar la lógica para enviar la solicitud
-            closeRequestModal();
+        async function sendRequest() {
+            const requestModal = document.getElementById('requestModal')
+            const id_accesos = requestModal.getAttribute('data-id-accesos');
+            console.log("id_accesos ", id_accesos);
+            
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            if (user && id_paciente) {
+                
+                const requestText = document.getElementById('requestText').value;
+                const errorRequestMessageDiv = document.querySelector('#error-request-message');
+                
+                try {
+                    const response = await fetch('/api/accesos/solicitudes', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ motivo: requestText, id_accesos: id_accesos, id_usuario: user.id_usuario })
+                    });
+                    
+                    const data = await response.json();
+
+                    alert('Solicitud de acceso enviada correctamente')
+                    
+                    
+                    if (response.ok) {
+                        closeRequestModal();
+                        // Agregar una funcion que remueva el acceso que se acabo de solicitar
+                    } else {
+                        errorRequestMessageDiv.textContent = data.error;
+                    }
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    errorRequestMessageDiv.textContent = 'Error en el servidor. Inténtalo nuevamente.';
+                }
+                
+            }else{
+
+            }
+
         }
         </script>
 

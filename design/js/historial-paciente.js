@@ -28,7 +28,7 @@ router.get('/consultas/paciente/:id_paciente', async (req, res) => {
 
     try {
         const result = await client.query(
-            `SELECT 
+            `SELECT
                 c.id_cita,
                 c.fecha_hora AS fecha_consulta,
                 e.id_especialidad,

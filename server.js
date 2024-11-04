@@ -12,6 +12,7 @@ const changePassword = require('./design/js/change-password');
 const doctorRoutes = require('./design/js/doctor');
 const citaRoutes = require('./design/js/cita');
 const asistenteDoctorRoutes = require('./design/js/asistente-doctor');
+const access = require('./design/js/access');
 const usuarioRouter = require('./design/js/usuario'); 
 const  {buscarUsuarios } = require('./design/js/listaUsuarios');
 const consultaRoutes = require('./design/js/consulta');
@@ -177,6 +178,8 @@ app.use('/api/consulta', consultaRoutes);
 app.use('/api/historial', historialRoutes);
 
 app.use('/api/', asistenteDoctorRoutes);
+
+app.use('/api/accesos', access);
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

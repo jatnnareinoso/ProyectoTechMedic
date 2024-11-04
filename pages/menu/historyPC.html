@@ -383,7 +383,8 @@
                 window.location.href = '../login.html';
             }  
             
-            obtenerConsultasPaciente();
+            obtenerAccesosSolicitados()
+            // obtenerConsultasPaciente();
         });
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -391,7 +392,7 @@
 
         if (id_paciente) {
             obtenerDetallesPaciente(id_paciente);
-            obtenerConsultasPaciente(id_paciente);
+            // obtenerConsultasPaciente(id_paciente);
         } else {
             console.error('ID de paciente no proporcionado en la URL');
         }
@@ -431,12 +432,15 @@
                 .catch(error => console.error('Error al obtener los detalles del paciente:', error));
         }
 
-        async function obtenerConsultasPaciente() {
+        async function obtenerAccesosSolicitados() {
             const idPaciente = new URLSearchParams(window.location.search).get('id_paciente');
+            const user = JSON.parse(localStorage.getItem('user'));
         
             try {
-                const response = await fetch(`/api/historial/consultas/paciente/${idPaciente}`);
-                const consultas = await response.json();
+                const response = await fetch(`/api/accesos/list/solicitadas/${user.id_usuario}`);
+                const accesosSolicitados = await response.json();
+                console.log("accesosSolicitados ", accesosSolicitados);
+                
         
                 const contenedorConsultas = document.getElementById('historial-medico');
                 if (!contenedorConsultas) {
@@ -446,49 +450,49 @@
         
                 contenedorConsultas.innerHTML = '';
         
-                for (const especialidad of consultas) {
-                    const consultasDeEspecialidad = especialidad.consultas;
+                // for (const especialidad of consultas) {
+                //     const consultasDeEspecialidad = especialidad.consultas;
         
-                    if (consultasDeEspecialidad.length > 0) {
-                        consultasDeEspecialidad.sort((a, b) => new Date(b.fecha_consulta) - new Date(a.fecha_consulta));
+                //     if (consultasDeEspecialidad.length > 0) {
+                //         consultasDeEspecialidad.sort((a, b) => new Date(b.fecha_consulta) - new Date(a.fecha_consulta));
         
-                        const consultaMasReciente = consultasDeEspecialidad[0];
+                //         const consultaMasReciente = consultasDeEspecialidad[0];
         
-                        const especialidadDiv = document.createElement('div');
-                        especialidadDiv.className = 'col-md-6';
+                //         const especialidadDiv = document.createElement('div');
+                //         especialidadDiv.className = 'col-md-6';
         
-                        especialidadDiv.innerHTML = `
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex mb-3">
-                                        <div class="flex-grow-1 align-items-start">
-                                            <div>
-                                                <h6 class="mb-0 text-muted">
-                                                    <i class="mdi mdi-circle-medium ${consultaMasReciente.estado === 'Aceptado' ? 'text-success' : 'text-danger'} fs-3 align-middle"></i>
-                                                    <span class="team-date">${new Date(consultaMasReciente.fecha_consulta).toLocaleDateString()}</span>
-                                                </h6>
-                                            </div>
-                                        </div>
-                                        <div class="dropdown ms-2">
-                                            <a href="#" class="delete-item" onclick="deleteProjects('task-item-1')">
-                                                <i class="mdi mdi-trash-can-outline align-middle font-size-16 text-danger"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <h5 class="mb-1 font-size-17 team-title">${especialidad.especialidad}</h5>
-                                        <p class="text-muted mb-0 team-description">Doctor: ${consultaMasReciente.doctor}</p>
-                                    </div>
-                                    <button class="btn btn-primary" onclick="verDetallePorEspecialidad(${idPaciente}, ${especialidad.id_especialidad})">Ver detalle</button>
-                                </div>
-                            </div>
-                        `;
+                //         especialidadDiv.innerHTML = `
+                //             <div class="card">
+                //                 <div class="card-body">
+                //                     <div class="d-flex mb-3">
+                //                         <div class="flex-grow-1 align-items-start">
+                //                             <div>
+                //                                 <h6 class="mb-0 text-muted">
+                //                                     <i class="mdi mdi-circle-medium ${consultaMasReciente.estado === 'Aceptado' ? 'text-success' : 'text-danger'} fs-3 align-middle"></i>
+                //                                     <span class="team-date">${new Date(consultaMasReciente.fecha_consulta).toLocaleDateString()}</span>
+                //                                 </h6>
+                //                             </div>
+                //                         </div>
+                //                         <div class="dropdown ms-2">
+                //                             <a href="#" class="delete-item" onclick="deleteProjects('task-item-1')">
+                //                                 <i class="mdi mdi-trash-can-outline align-middle font-size-16 text-danger"></i>
+                //                             </a>
+                //                         </div>
+                //                     </div>
+                //                     <div class="mb-4">
+                //                         <h5 class="mb-1 font-size-17 team-title">${especialidad.especialidad}</h5>
+                //                         <p class="text-muted mb-0 team-description">Doctor: ${consultaMasReciente.doctor}</p>
+                //                     </div>
+                //                     <button class="btn btn-primary" onclick="verDetallePorEspecialidad(${idPaciente}, ${especialidad.id_especialidad})">Ver detalle</button>
+                //                 </div>
+                //             </div>
+                //         `;
         
-                        console.log('ID Especialidad:', especialidad.id_especialidad);  // Verificar el valor
+                //         console.log('ID Especialidad:', especialidad.id_especialidad);  // Verificar el valor
         
-                        contenedorConsultas.appendChild(especialidadDiv);
-                    }
-                }
+                //         contenedorConsultas.appendChild(especialidadDiv);
+                //     }
+                // }
             } catch (error) {
                 console.error('Error al obtener las consultas del paciente:', error);
             }
@@ -503,7 +507,7 @@
             window.location.href = `../menu/medicalHistory.html?id_paciente=${idPaciente}&id_especialidad=${idEspecialidad}`;
         }        
         
-        obtenerConsultasPaciente();
+        // obtenerConsultasPaciente();
     
         function deleteProjects(id) {
             console.log(`Eliminar consulta con ID: ${id}`);
