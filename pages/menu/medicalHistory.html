@@ -17,6 +17,10 @@
     <link href="../../design/css/pg-admin-2.css" rel="stylesheet">
     <link href="../../design/css/doctor/medicalhistory.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96/css/materialdesignicons.min.css" 
+        integrity="sha512-LX0YV/MWBEn2dwXCYgQHrpa9HJkwB+S+bnBpifSOTO1No27TqNMKYoAn6ff2FBh03THAzAiiCwQ+aPX+/Qt/Ow==" 
+            crossorigin="anonymous" referrerpolicy="no-referrer">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
@@ -218,95 +222,95 @@
                         </form>
                     </div>
 
-                    <section id="resume" class="resume">
-                        <div class="container" data-aos="fade-up">
+                    <section id="resume" class="resume row">
+                        <div  class="container" data-aos="fade-up">
                         </div>
                     </section>
                 </div>
-
-                <script>
-                    async function cargarConsultas() {
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const idPaciente = urlParams.get('id_paciente');
-                        const idEspecialidad = urlParams.get('id_especialidad');
-                
-                        try {
-                            const response = await fetch(`/api/historial/consultas/pacientes/${idPaciente}/especialidad/${idEspecialidad}`);
-                            const consultas = await response.json();
-                
-                            const contenedorConsultas = document.getElementById('resume');
-                            contenedorConsultas.innerHTML = '';
-                
-                            consultas.forEach(consulta => {
-                                const consultaDiv = document.createElement('div');
-                                consultaDiv.className = 'resume-item pb-0';
-                
-                                // Ahora extraemos las rutas de archivos como un arreglo
-                                let archivosHtml = '';
-                                if (consulta.diagnostico.rutas && consulta.diagnostico.rutas.length > 0) {
-                                    // Convertimos la cadena JSON a un arreglo de rutas
-                                    archivosHtml = consulta.diagnostico.rutas.map(ruta => `
-                                        <a href="${ruta}" download>Descargar archivo</a>
-                                    `).join('<br>');
-                                } else {
-                                    archivosHtml = 'No hay archivos adjuntos';
-                                }
-                
-                                consultaDiv.innerHTML = `
-                                    <h4>Dr. ${consulta.doctor}</h4>
-                                    <h5>${new Date(consulta.fecha_consulta).toLocaleDateString()}</h5>
-                                    <h4>Motivo de Consulta</h4>
-                                    <p><em>${consulta.motivo}</em></p>
-                                    <h4>Descripción</h4>
-                                    <p>${consulta.descripcion}</p>
-                                    <h4>Pruebas a realizar</h4>
-                                    <p>${consulta.pruebas ? consulta.pruebas : 'No hay pruebas a realizar'}</p>
-                                    <h4>Notas Internas</h4>
-                                    <p>${consulta.notas_internas}</p>
-                                    <h4>Notas Externas</h4>
-                                    <p>${consulta.notas_externas}</p>
-                                    <h4>Diagnóstico</h4>
-                                    <p><strong>Descripción:</strong> ${consulta.diagnostico.descripcion || 'No hay diagnóstico'}</p>
-                                    <p><strong>Observación:</strong> ${consulta.diagnostico.observacion || 'No hay observación'}</p>
-                                    <p><strong>Resultado de Pruebas:</strong> ${consulta.diagnostico.resultado_pruebas || 'Sin resultados'}</p>
-                                    <p><strong>Estado:</strong> ${consulta.diagnostico.estado ? 'Activo' : 'Inactivo'}</p>
-                                    <h4>Archivos del Diagnóstico</h4>
-                                    <p>${archivosHtml}</p>
-                                `;
-                
-                                contenedorConsultas.appendChild(consultaDiv);
-                            });
-                        } catch (error) {
-                            console.error('Error al cargar las consultas:', error);
-                        }
-                    }
-                
-                    document.addEventListener('DOMContentLoaded', cargarConsultas);
-                </script>
-                   
             </div>
         </div>
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-              const user = JSON.parse(localStorage.getItem('user'));
-      
-              if (user) {
-                  console.log(user); 
-      
-                  document.querySelectorAll('.user-name').forEach(element => {
-                      element.textContent = `${user.nombre} ${user.apellido}`;
-                  });
-      
-                  document.getElementById('user-email').textContent = user.correo;
-                  document.getElementById('user-fecha-nacimiento').textContent = user.fecha_nacimiento;
-                  document.getElementById('user-celular').textContent = user.celular;
-                  document.getElementById('user-cedula').textContent = user.cedula;
-              } else {
-                 
-                  window.location.href = '../login.html';
-              }
-          });
+                const user = JSON.parse(localStorage.getItem('user'));
+
+                if (user) {
+                    console.log(user); 
+                    document.querySelectorAll('.user-name').forEach(element => {
+                        element.textContent = `${user.nombre} ${user.apellido}`;
+                    });
+                    
+                    cargarConsultas()
+                //   document.getElementById('user-email').textContent = user.correo;
+                //   document.getElementById('user-fecha-nacimiento').textContent = user.fecha_nacimiento;
+                //   document.getElementById('user-celular').textContent = user.celular;
+                //   document.getElementById('user-cedula').textContent = user.cedula;
+                } else {
+                    window.location.href = '../login.html';
+                }
+            });
+
+            async function cargarConsultas() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const idPaciente = urlParams.get('id_paciente');
+                const idEspecialidad = urlParams.get('id_especialidad');
+                const user = JSON.parse(localStorage.getItem('user'));
+        
+                try {
+                    const response = await fetch(`/api/historial/consultas/pacientes/${idPaciente}/especialidad/${idEspecialidad}/usuario/${user.id_usuario}`);
+                    const consultas = await response.json();
+        
+                    const contenedorConsultas = document.getElementById('resume');
+                    contenedorConsultas.innerHTML = '';
+        
+                    consultas.forEach(consulta => {
+                        
+                        const consultaDiv = document.createElement('div');
+                        consultaDiv.className = 'resume-item pb-0 col-12 col-md-6 mt-3';
+        
+                        // Ahora extraemos las rutas de archivos como un arreglo
+                        let archivosHtml = '';
+                        if (consulta.diagnostico.rutas && consulta.diagnostico.rutas.length > 0) {
+                            // Convertimos la cadena JSON a un arreglo de rutas
+                            archivosHtml = consulta.diagnostico.rutas.map(ruta => `
+                                <a href="${ruta}" download> Descargar archivo </a>
+                            `).join('<br>');
+                        } else {
+                            archivosHtml = 'No hay archivos adjuntos';
+                        }
+                        consultaDiv.innerHTML = `
+                            <h4 class="text-black">Dr. ${consulta.doctor}</h4>
+                            <h5>${new Date(consulta.fecha_consulta).toLocaleDateString()}</h5>
+                            <h4>Motivo de Consulta</h4>
+                            <p><em>${consulta.motivo}</em></p>
+                            <h4>Descripción</h4>
+                            <p>${consulta.descripcion}</p>
+                            <h4>Pruebas a realizar</h4>
+                            <p>${consulta.pruebas ? consulta.pruebas : 'No hay pruebas a realizar'}</p>
+
+                            ${
+                                consulta.id_usuario == user.id_usuario ? `
+                                <h4>Notas Internas</h4> 
+                                <p>${consulta.notas_internas}</p>
+                                ` : ''
+                            }
+                            <h4>Notas Externas</h4>
+                            <p>${consulta.notas_externas}</p>
+                            <h4>Diagnóstico</h4>
+                            <p><strong>Descripción:</strong> ${consulta.diagnostico.descripcion || 'No hay diagnóstico'}</p>
+                            <p><strong>Observación:</strong> ${consulta.diagnostico.observacion || 'No hay observación'}</p>
+                            <p><strong>Resultado de Pruebas:</strong> ${consulta.diagnostico.resultado_pruebas || 'Sin resultados'}</p>
+                            <p><strong>Estado:</strong> ${consulta.diagnostico.estado ? 'Activo' : 'Inactivo'}</p>
+                            <h4>Archivos del Diagnóstico</h4>
+                            <p>${archivosHtml}</p>
+                        `;
+        
+                        contenedorConsultas.appendChild(consultaDiv);
+                    });
+                } catch (error) {
+                    console.error('Error al cargar las consultas:', error);
+                }
+            }
         </script>
 
         <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

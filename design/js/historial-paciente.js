@@ -77,10 +77,21 @@ router.get('/consultas/paciente/:id_paciente', async (req, res) => {
     }
 });
 
-router.get('/consultas/pacientes/:id_paciente/especialidad/:id_especialidad', async (req, res) => {
-    const { id_paciente, id_especialidad } = req.params;
+router.get('/consultas/pacientes/:id_paciente/especialidad/:id_especialidad/usuario/:id_usuario', async (req, res) => {
+    const { id_paciente, id_especialidad, id_usuario } = req.params;
 
     try {
+
+
+        const result_acceso_user = await client.query(`
+                SELECT au.estado 
+                FROM accesos_usuario au 
+                JOIN accesos acc ON au.id_accesos = acc.id_acessos
+                WHERE au.id_paciente = ${id_paciente} AND acc.id_especialidad = ${id_especialidad} AND au.id_usuario = ${id_usuario}
+            `)
+        
+        const has_access_granted = result_acceso_user.rows.length > 0 && result_acceso_user.rows[0].estado == true
+
         const result = await client.query(
             `SELECT 
                 c.id_cita,
@@ -93,6 +104,7 @@ router.get('/consultas/pacientes/:id_paciente/especialidad/:id_especialidad', as
                 c.notas_internas,
                 c.notas_externas,
                 c.pruebas,
+                u.id_usuario,
                 diag.descripcion AS diagnostico_descripcion,
                 diag.observacion AS diagnostico_observacion,
                 diag.ruta_archivos AS diagnostico_ruta_archivos,
@@ -111,15 +123,12 @@ router.get('/consultas/pacientes/:id_paciente/especialidad/:id_especialidad', as
             LEFT JOIN 
                 diagnostico diag ON c.id_consulta = diag.id_consulta
             WHERE 
-                ct.id_paciente = $1
-                AND c.id_especialidad = $2
+                ct.id_paciente = $1 AND c.id_especialidad = $2 ${has_access_granted ? '' : `AND u.id_usuario = ${id_usuario}`}
             ORDER BY 
                 c.fecha_hora DESC;
             `,
             [id_paciente, id_especialidad]
         );
-
-        console.log('Resultado de la consulta:', result.rows); // Agregado para debugging
 
         const consultas = result.rows.map(row => {
             let rutas = null;
@@ -141,6 +150,7 @@ router.get('/consultas/pacientes/:id_paciente/especialidad/:id_especialidad', as
                 doctor: row.doctor,
                 motivo: row.motivo,
                 descripcion: row.descripcion,
+                id_usuario: row.id_usuario,
                 estado: row.estado,
                 notas_internas: row.notas_internas,
                 notas_externas: row.notas_externas,

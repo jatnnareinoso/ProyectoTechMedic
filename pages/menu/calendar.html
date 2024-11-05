@@ -568,8 +568,6 @@
                 color: colorSeleccionado
             };
         
-            console.log('Datos enviados:', idCitaData);
-        
             fetch('/api/cita/agregarCita', {
                 method: 'POST',
                 headers: {
@@ -582,7 +580,7 @@
                 return response.json();
             })
             .then(data => {
-                console.log('Cita agregada:', data);
+                
                 document.getElementById('new-event').value = '';
                 document.getElementById('new-event-cedula').value = '';
                 document.getElementById('id_tipo_consulta').value = '';

@@ -454,7 +454,7 @@
         function obtenerListadoAccesos() {
             const user = JSON.parse(localStorage.getItem('user'));
 
-            fetch(`/api/accesos/list/faltantes/${user.id_usuario}`)
+            fetch(`/api/accesos/list/faltantes/usuario/${user.id_usuario}/paciente/${id_paciente}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Error al obtener el listado de accesos');
@@ -462,7 +462,7 @@
                 return response.json();
             })
             .then(data => {
-                console.log("data ", data);
+                
                 renderAccessListItems(data)
             })
         }
@@ -474,7 +474,7 @@
                 const taskListBox = document.createElement('div');
 
                 taskListBox.innerHTML= `
-                    <div class="task-list-box" id="landing-task">
+                    <div class="task-list-box" id="landing-task" data-id-accesos="${accessItem.id_accesos}">
                         <div id="task-item-1">
                             <div class="card task-box rounded-3">
                                 <div class="card-body">
@@ -553,10 +553,11 @@
         
         async function sendRequest() {
             const requestModal = document.getElementById('requestModal')
-            const id_accesos = requestModal.getAttribute('data-id-accesos');
-            console.log("id_accesos ", id_accesos);
+            const id_acceso = requestModal.getAttribute('data-id-accesos');
             
             const user = JSON.parse(localStorage.getItem('user'));
+            const urlParams = new URLSearchParams(window.location.search);
+            const id_paciente = urlParams.get('id_paciente');
             
             if (user && id_paciente) {
                 
@@ -568,7 +569,7 @@
                     const response = await fetch('/api/accesos/solicitudes', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ motivo: requestText, id_accesos: id_accesos, id_usuario: user.id_usuario })
+                        body: JSON.stringify({ motivo: requestText, id_accesos: id_acceso, id_usuario: user.id_usuario, id_paciente: id_paciente })
                     });
                     
                     const data = await response.json();
@@ -576,12 +577,12 @@
                     
                     if (response.ok) {
                         closeRequestModal();
-                        // TODO: Agregar una funcion que remueva el acceso que se acabo de solicitar
-                        
-                        alert('Solicitud de acceso enviada correctamente')
+                        removeRequestedAccess(id_acceso)
                         requestTextInput.value = '';
                         errorRequestMessageDiv.textContent = '';
-                        
+
+                        alert('Solicitud de acceso enviada correctamente')
+
                     } else {
                         errorRequestMessageDiv.textContent = data.error;
                     }
@@ -595,6 +596,15 @@
 
             }
 
+        }
+
+
+        function removeRequestedAccess(id_acceso){
+            const requestedAccess = document.querySelector(`div#landing-task[data-id-accesos="${id_acceso}"]`);
+
+            if (requestedAccess) {                
+                requestedAccess.remove();
+            }
         }
         </script>
 

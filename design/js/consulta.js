@@ -12,7 +12,7 @@ router.get('/informacion-cita/:id_cita', async (req, res) => {
                 CONCAT(p.nombre, ' ', p.apellido) AS nombre_paciente,
                 p.cedula,
                 d.id_doctor,
-               ARRAY_AGG(json_build_object('id_especialidad', e.id_especialidad, 'nombre_especialidad', e.especialidad)) AS especialidades
+                ARRAY_AGG(json_build_object('id_especialidad', e.id_especialidad, 'nombre_especialidad', e.especialidad)) AS especialidades
             FROM 
                 cita c
                 JOIN paciente p ON c.id_paciente = p.id_paciente
@@ -42,26 +42,42 @@ router.post('/registerConsulta', async (req, res) => {
     const { motivo, descripcion, fecha_hora, estado, id_cita, notas_internas, notas_externas, pruebas, id_especialidad } = req.body;
 
     try {
-        const consultaQuery = `
-            INSERT INTO consulta (motivo, descripcion, fecha_hora, estado, id_cita, notas_internas, notas_externas, pruebas, id_especialidad)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-            RETURNING *;
+
+        const queryCita = `
+            SELECT id_paciente from cita where id_cita=${id_cita}
         `;
 
-        const values = [
-            motivo,
-            descripcion,
-            fecha_hora,
-            estado,
-            id_cita,
-            notas_internas,
-            notas_externas,
-            pruebas || null,
-            id_especialidad
-        ];
+        const resultCita = await client.query(queryCita);
 
-        const consultaResult = await client.query(consultaQuery, values);
-        res.status(201).json(consultaResult.rows[0]); 
+        if (resultCita.rows.length > 0) {
+            
+            const id_paciente = resultCita.rows[0].id_paciente
+            
+            const consultaQuery = `
+                INSERT INTO consulta (motivo, descripcion, fecha_hora, estado, id_cita, notas_internas, notas_externas, pruebas, id_especialidad, id_paciente)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+                RETURNING *;
+            `;
+            
+            const values = [
+                motivo,
+                descripcion,
+                fecha_hora,
+                estado,
+                id_cita,
+                notas_internas,
+                notas_externas,
+                pruebas || null,
+                id_especialidad,
+                id_paciente
+            ];
+            
+            const consultaResult = await client.query(consultaQuery, values);
+            res.status(201).json(consultaResult.rows[0]); 
+            
+        }else{
+            res.status(400).json({ message: 'La cita utilizada no existe.' })
+        }
     } catch (error) {
         console.error('Error al agregar la consulta', error);
         res.status(500).json({ message: 'Error al agregar la consulta' });
@@ -102,7 +118,7 @@ router.get('/consultasDoctor', async (req, res) => {
             JOIN 
                 usuario u ON d.id_usuario = u.id_usuario
             JOIN 
-                paciente p ON ct.id_paciente = p.id_paciente
+                paciente p ON c.id_paciente = p.id_paciente
             WHERE 
                 d.id_doctor = $1
             ORDER BY 

@@ -298,9 +298,10 @@
                         const urlParams = new URLSearchParams(window.location.search);
                         const idPaciente = urlParams.get('id_paciente');
                         const idEspecialidad = urlParams.get('id_especialidad');
+                        const user = JSON.parse(localStorage.getItem('user'));
                 
                         try {
-                            const response = await fetch(`/api/historial/consultas/pacientes/${idPaciente}/especialidad/${idEspecialidad}`);
+                            const response = await fetch(`/api/historial/consultas/pacientes/${idPaciente}/especialidad/${idEspecialidad}/usuario/${user.id_usuario}`);
                             const consultas = await response.json();
                 
                             const contenedorConsultas = document.getElementById('resume');
