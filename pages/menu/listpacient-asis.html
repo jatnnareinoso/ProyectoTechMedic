@@ -105,7 +105,7 @@
             </li>
 
             <li class="nav-item active">
-                <a class="nav-link" href="./menu/listpacient-asis.html">
+                <a class="nav-link" href="../menu/listpacient-asis.html">
                     <i class="fa-solid fa-bed"></i>
                     <span>Pacientes</span></a>
             </li>
@@ -117,22 +117,23 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link" href="listaConsultas-asis.html">
+                    <i class="fa-solid fa-stethoscope"></i>
+                    <span>Consultas</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link" href="../menu/calendarAsis.html">
                     <i class="fa-solid fa-calendar-days"></i>
                     <span>Calendario</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="message-asis.html">
                     <i class="fa-regular fa-envelope"></i>
                     <span>Mensajería</span>
                 </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span>Informaciones</span></a>
             </li>
 
         </ul>
@@ -329,7 +330,7 @@
 
                                                     <div class="form-row">
                                                         <div class="form-group col-md-3">
-                                                            <label for="editarAlergias">¿Tiene alergias?</label>
+                                                            <label for="editarAlergias">¿Es alérgico/a a algo?</label>
                                                             <select class="form-control" id="editarAlergias" required>
                                                                 <option value="false">No</option>
                                                                 <option value="true">Sí</option>
@@ -343,7 +344,7 @@
 
                                                     <div class="form-row">
                                                         <div class="form-group col-md-3">
-                                                            <label for="editarEnfermedades">¿Tiene enfermedades?</label>
+                                                            <label for="editarEnfermedades">¿Posee alguna condición médica preexistente?</label>
                                                             <select class="form-control" id="editarEnfermedades" required>
                                                                 <option value="false">No</option>
                                                                 <option value="true">Sí</option>
@@ -357,7 +358,7 @@
 
                                                     <div class="form-row">
                                                         <div class="form-group col-md-3" id="sustanciasContainer" style="display: none;">
-                                                            <label for="editarSustancias">¿Usa sustancias?</label>
+                                                            <label for="editarSustancias">¿Consume alguna sustancia adictiva?</label>
                                                             <select class="form-control" id="editarSustancias" required>
                                                                 <option value="false">No</option>
                                                                 <option value="true">Sí</option>
@@ -579,16 +580,16 @@
                             const start = (page - 1) * recordsPerPage;
                             const end = page * recordsPerPage;
                             const paginaPerfiles = perfiles.slice(start, end);
-                
+                        
                             const tablaPaciente = document.getElementById('tabla-paciente');
-                            tablaPaciente.innerHTML = ''; 
+                            tablaPaciente.innerHTML = '';
                             paginaPerfiles.forEach((paciente) => {
                                 const row = document.createElement('tr');
-                
+                        
                                 if (paciente.menor === true) {
                                     paciente.cedula = paciente.cedula_familiar;
                                 }
-                
+                        
                                 row.innerHTML = `
                                     <td class="px-4 py-3 text-sm">${paciente.nombre}</td>
                                     <td class="px-4 py-3 text-sm">${paciente.apellido}</td>
@@ -609,14 +610,20 @@
                                         </button>
                                     </td>
                                 `;
+                        
+                                // Evento para doble clic en la fila
+                                row.addEventListener('dblclick', function () {
+                                    window.location.href = `historyPC-asis.html?id_paciente=${paciente.id_paciente}`;
+                                });
+                        
                                 tablaPaciente.appendChild(row);
-                
+                        
                                 row.querySelector('.edit-paciente-btn').addEventListener('click', function (event) {
                                     const id_paciente = event.currentTarget.getAttribute('data-id-paciente');
-                                    console.log('ID del paciente:', id_paciente); 
-                
+                                    console.log('ID del paciente:', id_paciente);
+                        
                                     const paciente = perfiles.find(p => p.id_paciente == id_paciente);
-                
+                        
                                     if (paciente) {
                                         abrirModalEditarPaciente(paciente);
                                     } else {
@@ -624,11 +631,11 @@
                                     }
                                 });
                             });
-                
+                        
                             document.getElementById('prevButton').disabled = currentPage === 1;
                             document.getElementById('nextButton').disabled = currentPage * recordsPerPage >= perfiles.length;
                         }
-                
+                        
                         document.querySelector('.close').addEventListener('click', function () {
                             document.getElementById('editarPacienteModal').classList.remove('show');
                             document.getElementById('editarPacienteModal').style.display = 'none';

@@ -160,6 +160,32 @@ async function enviarCorreo({ correoPaciente, nombreCompletoPaciente, nombreComp
     }
 }
 
+router.put('/actualizarCita/:id', async (req, res) => {
+    const idCita = req.params.id;
+    const { id_paciente, id_doctor, id_centro_medico, id_usuario, fecha_hora, estado, color, id_tipo_consulta } = req.body;
+
+    try {
+        const query = `
+            UPDATE cita
+            SET id_paciente = $1, id_doctor = $2, id_centro_medico = $3, id_usuario = $4, fecha_hora = $5, estado = $6, color = $7, id_tipo_consulta = $8
+            WHERE id_cita = $9 RETURNING *
+        `;
+        const values = [id_paciente, id_doctor, id_centro_medico, id_usuario || null, fecha_hora, estado, color, id_tipo_consulta, idCita];
+        const result = await client.query(query, values);
+
+        if (result.rows.length > 0) {
+            const citaActualizada = result.rows[0];
+
+            res.status(200).json({ message: 'Cita actualizada correctamente', cita: citaActualizada });
+        } else {
+            res.status(404).json({ message: 'Cita no encontrada' });
+        }
+    } catch (error) {
+        console.error('Error al actualizar la cita:', error.message);
+        res.status(500).json({ message: 'Error al actualizar la cita' });
+    }
+});
+
 router.get('/citasUsuario', async (req, res) => {
     const { id_usuario } = req.query;
 
@@ -274,6 +300,23 @@ router.get('/tipo_consulta', async (req, res) => {
     } catch (error) {
         console.error('Error al obtener tipos de consulta:', error);
         res.status(500).json({ error: 'Error al obtener tipos de consulta' });
+    }
+});
+
+router.get('/citaId/:id_cita', async (req, res) => {
+    const { id_cita } = req.params;
+    try {
+        const result = await client.query(
+            `SELECT * FROM cita WHERE id_cita = $1`,
+            [id_cita]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'Cita no encontrada' });
+        }
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Error al obtener la cita:', error);
+        res.status(500).json({ message: 'Error al obtener la cita' });
     }
 });
 

@@ -1,6 +1,4 @@
-const pool = require('./db');
-
-const defaultPassword = 'tecnologiamedicinal'; 
+const pool = require('./db'); 
 
 const login = async (req, res) => {
     const { usuario, password } = req.body;
@@ -18,7 +16,9 @@ const login = async (req, res) => {
             return res.status(401).json({ error: 'Contraseña incorrecta' });
         }
 
-        if (password === defaultPassword) {
+        const isFirstLogin = user.password.length === 16;
+
+        if (isFirstLogin) {
             return res.json({
                 redirectUrl: '../pages/password.html', 
                 usuario: {

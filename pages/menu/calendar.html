@@ -88,14 +88,14 @@
           </li>
 
           <li class="nav-item">
-              <a class="nav-link" href="">
-                  <i class="fa-solid fa-stethoscope"></i>
-                  <span>Consultas</span>
-              </a>
+            <a class="nav-link" href="listaConsultas-asis.html">
+                <i class="fa-solid fa-stethoscope"></i>
+                <span>Consultas</span>
+            </a>
           </li>
 
           <li class="nav-item">
-              <a class="nav-link" href="">
+              <a class="nav-link" href="message-dc.html">
                   <i class="fa-regular fa-envelope"></i>
                   <span>Mensajería</span>
               </a>
@@ -111,12 +111,6 @@
               <a class="nav-link" href="">
                   <i class="fa-solid fa-briefcase"></i>
                   <span>Permisos</span></a>
-          </li>
-
-             <li class="nav-item">
-              <a class="nav-link" href="">
-                  <i class="fa-solid fa-circle-info"></i>
-                  <span>Informaciones</span></a>
           </li>
 
         </ul>
@@ -574,8 +568,6 @@
                 color: colorSeleccionado
             };
         
-            console.log('Datos enviados:', idCitaData);
-        
             fetch('/api/cita/agregarCita', {
                 method: 'POST',
                 headers: {
@@ -588,7 +580,7 @@
                 return response.json();
             })
             .then(data => {
-                console.log('Cita agregada:', data);
+                
                 document.getElementById('new-event').value = '';
                 document.getElementById('new-event-cedula').value = '';
                 document.getElementById('id_tipo_consulta').value = '';

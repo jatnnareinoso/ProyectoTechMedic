@@ -94,9 +94,10 @@
                     <span class="title">Documentación</span>
 
                     <div class="fields">
-                        <div class="input-field" id="cedulaField">
+                        <div class="input-field">
                             <label>Número de Identidad</label>
-                            <input type="number" name="cedula" placeholder="Ingrese número de identidad" required>
+                            <input type="number" name="cedula" id="cedula" placeholder="Ingrese número de identidad" required>
+                            <span id="cedulaError" class="error" style="color: red;"></span> 
                         </div>
 
                         <div class="input-field" id="exequaturField">
@@ -131,15 +132,6 @@
                 </div>
 
                 <div class="details password">
-                    <span class="title">Detalles Credenciales</span>
-
-                    <div class="fields">
-                        <div class="input-field">
-                            <label>Usuario</label>
-                            <input type="text" name="usuario" id="usuario" placeholder="Ingrese nombre de usuario" required>
-                            <span id="usuarioError" class="error" style="color: red;"></span> 
-                        </div> 
-                    </div>
                     <div class="button-container">
                         <button type="submit">CREAR USUARIO</button>
                     </div>
@@ -156,12 +148,12 @@
             const especialidadDiv = document.getElementById('especialidadDiv');
             const centroMedicoSelect = document.getElementById('centroMedicoSelect');
             const correoField = document.getElementById('correo');
-            const usuarioField = document.getElementById('usuario');
             const correoError = document.getElementById('correoError');
-            const usuarioError = document.getElementById('usuarioError');
             const especialidadesSelect = document.getElementById('especialidadesSelect');
             const doctoresSelect = document.getElementById('doctoresSelect');
             const doctorDiv = document.getElementById('doctorDiv');
+            const cedulaField = document.getElementById('cedula');
+            const cedulaError = document.getElementById('cedulaError');
     
             function updateFields() {
                 const userType = userSelect.value;
@@ -262,9 +254,9 @@
                 data.id_doctores = doctoresSeleccionados;
     
                 const correoValido = await validarCorreo(correoField.value);
-                const usuarioValido = await validarUsuario(usuarioField.value);
+                const cedulaValida = await validarCedula(cedulaField.value);
     
-                if (correoValido && usuarioValido) {
+                if (correoValido && cedulaValida) {
                     fetch('/api/register', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -328,15 +320,15 @@
                 }
             }
     
-            async function validarUsuario(usuario) {
+            async function validarCedula(cedula) {
                 try {
-                    const response = await fetch(`/api/verificar-usuario?usuario=${usuario}`);
+                    const response = await fetch(`/api/verificar-cedula?cedula=${cedula}`);
                     const data = await response.json();
                     if (data.existe) {
-                        usuarioError.textContent = 'El usuario ya está en uso';
+                        cedulaError.textContent = 'Existe un usuario registrado con ese número de identificación';
                         return false;
                     }
-                    usuarioError.textContent = '';
+                    cedulaError.textContent = '';
                     return true;
                 } catch (error) {
                     console.error('Error al validar el usuario:', error);

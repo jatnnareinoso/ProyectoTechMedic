@@ -1,3 +1,5 @@
+const express = require('express');
+const router = express.Router();
 const pool = require('./db'); 
 
 const registrarPaciente = async (req, res) => {
@@ -37,4 +39,20 @@ const registrarPaciente = async (req, res) => {
     }
 };
 
-module.exports = { registrarPaciente };
+const buscarPacientePorCedula = async (cedula) => {
+    try {
+        const result = await pool.query('SELECT nombre, apellido FROM paciente WHERE cedula = $1', [cedula]);
+
+        if (result.rows.length > 0) {
+            return { existe: true, nombre: result.rows[0].nombre, apellido: result.rows[0].apellido };
+        } else {
+            return { existe: false };
+        }
+    } catch (error) {
+        console.error('Error al buscar paciente:', error);
+        throw new Error('Error al buscar paciente.');
+    }
+};
+
+
+module.exports = { registrarPaciente, buscarPacientePorCedula };

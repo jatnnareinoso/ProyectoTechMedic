@@ -1,8 +1,7 @@
 const express = require('express');
-const client = require('./db'); // Asegúrate de que este archivo exporte el cliente de PostgreSQL
+const client = require('./db');
 const router = express.Router();
 
-// Obtener perfiles de usuarios
 const obtenerPerfilesUsuarios = async () => {
   try {
     const query = `
@@ -37,12 +36,11 @@ const obtenerPerfilesUsuarios = async () => {
   }
 };
 
-// Obtener usuario por ID
 const obtenerUsuarioPorId = async (id_usuario) => {
     const query = 'SELECT * FROM usuario WHERE id_usuario = $1'; 
     try {
         const result = await client.query(query, [id_usuario]);
-        return result.rows[0]; // Retornar el primer usuario encontrado
+        return result.rows[0]; 
     } catch (error) {
         console.error('Error al obtener usuario:', error);
         throw new Error('Error al obtener usuario');
@@ -53,7 +51,7 @@ const obtenerEspecialidades = async () => {
     const query = 'SELECT * FROM especialidad';
     try {
         const result = await client.query(query);
-        return result.rows; // Retorna todas las especialidades
+        return result.rows; 
     } catch (error) {
         console.error('Error al obtener especialidades:', error);
         throw new Error('Error al obtener especialidades');
@@ -64,15 +62,15 @@ router.get('/api/doctor/:id_usuario', async (req, res) => {
     const id_usuario = req.params.id_usuario;
 
     try {
-        const doctorInfo = await obtenerDoctorPorId(id_usuario); // Obtener información del doctor
-        const especialidadesDoctor = await obtenerEspecialidadesDoctor(id_usuario); // Especialidades del doctor
-        const todasEspecialidades = await obtenerEspecialidades(); // Todas las especialidades
+        const doctorInfo = await obtenerDoctorPorId(id_usuario);
+        const especialidadesDoctor = await obtenerEspecialidadesDoctor(id_usuario); 
+        const todasEspecialidades = await obtenerEspecialidades();
 
         console.log({
             doctor: doctorInfo,
             especialidadesDoctor,
             todasEspecialidades
-        }); // Verifica si estas propiedades tienen valores
+        }); 
 
         res.json({
             doctor: doctorInfo,
@@ -85,7 +83,6 @@ router.get('/api/doctor/:id_usuario', async (req, res) => {
     }
 });
 
-// Obtener las especialidades del doctor
 const obtenerEspecialidadesDoctor = async (id_usuario) => {
     const query = `
         SELECT e.id_especialidad, e.especialidad
@@ -95,7 +92,7 @@ const obtenerEspecialidadesDoctor = async (id_usuario) => {
     `;
     try {
         const result = await client.query(query, [id_usuario]);
-        return result.rows; // Retornar todas las especialidades encontradas
+        return result.rows; 
     } catch (error) {
         console.error('Error al obtener especialidades del doctor:', error);
         throw new Error('Error al obtener especialidades del doctor');
@@ -103,7 +100,6 @@ const obtenerEspecialidadesDoctor = async (id_usuario) => {
 };
 
 
-// Actualizar Administrador
 const actualizarAdministrador = async (id_usuario, datosActualizados) => {
     const { nombre, apellido, fecha_nacimiento, sexo, celular, telefono, cedula, correo, usuario, password, id_centro_medico, estado } = datosActualizados;
     const query = `
@@ -121,7 +117,6 @@ const actualizarAdministrador = async (id_usuario, datosActualizados) => {
     }
 };
 
-// Actualizar Doctor (incluyendo exequatur y especialidades)
 const actualizarDoctor = async (id_usuario, datosActualizados) => {
     const { nombre, apellido, fecha_nacimiento, sexo, celular, telefono, cedula, correo, usuario, password, id_centro_medico, exequatur, id_especialidad, estado } = datosActualizados;
 
@@ -152,19 +147,15 @@ const actualizarDoctor = async (id_usuario, datosActualizados) => {
     `;
 
     try {
-        await client.query('BEGIN'); // Iniciar transacción
+        await client.query('BEGIN');
 
-        // Actualizar usuario
         await client.query(queryUsuario, [nombre, apellido, fecha_nacimiento, sexo, celular, telefono, cedula, correo, usuario, password, id_centro_medico, estado, id_usuario]);
 
-        // Actualizar doctor (exequatur)
         await client.query(queryDoctor, [exequatur, id_usuario]);
 
-        // Obtener especialidades actuales
         const { rows: especialidadesActuales } = await client.query(queryObtenerEspecialidadesActuales, [id_usuario]);
         const idsEspecialidadesActuales = especialidadesActuales.map(e => e.id_especialidad);
 
-        // Comprobar si hay cambios en las especialidades
         if (JSON.stringify(idsEspecialidadesActuales) !== JSON.stringify(id_especialidad)) {
 
             await client.query(queryEliminarEspecialidades, [id_usuario]);
